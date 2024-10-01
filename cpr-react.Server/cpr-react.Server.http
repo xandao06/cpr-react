@@ -1,6 +1,6 @@
 @cpr_react.Server_HostAddress = http://localhost:5023
 
-GET {{cpr_react.Server_HostAddress}}/weatherforecast/
+GET {{cpr_react.Server_HostAddress}}/chamado/
 Accept: application/json
 
 ###
