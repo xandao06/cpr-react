@@ -7,10 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddScoped<ChamadoService>();
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<CPRDbContext>(options =>
@@ -25,6 +23,7 @@ builder.Services.AddCors(options =>
 });
 
 
+
 var app = builder.Build();
 
 app.UseCors("AllowAllOrigins");
@@ -32,7 +31,6 @@ app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseRouting();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -41,10 +39,29 @@ if (app.Environment.IsDevelopment())
 
 //app.UseHttpsRedirection();
 
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next.Invoke();
+    }
+    catch (Exception ex)
+    {
+        // Aqui você pode registrar o erro, se necessário
+        Console.Error.WriteLine($"Erro: {ex.Message}");
+
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        await context.Response.WriteAsync("Um erro ocorreu. Tente novamente mais tarde.");
+    }
+});
+
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapFallbackToFile("/ChamadoIndex.html");
+app.MapFallbackToFile("/ChamadoIndex.jsx");
+
+
 
 app.Run();
+

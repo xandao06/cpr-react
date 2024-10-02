@@ -24,7 +24,7 @@ namespace cpr_react.Server.Controllers
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Chamado>>> GetChamados()
-        { 
+        {
             return await _dbcontext.Chamados.ToListAsync();
         }
 
@@ -36,17 +36,39 @@ namespace cpr_react.Server.Controllers
         }
 
 
-        //[HttpGet(Name = "GetChamado")]
-        //public IActionResult GetChamados()
-        //{
-        //    var chamados = chamadoService.GetAll();
-        //    if (chamados == null || !chamados.Any())
-        //    {
-        //        return NoContent();
-        //    }
-        //    return Ok(chamados);
+        // LOG DE ERROS
 
-        //}
+        [HttpGet("error-logs")]
+        public IActionResult ErrorLogs()
+        {
+            try
+            {
+                // Sua lógica para recuperar os logs de erro
+                var errorLogs = GetErrorLogs(); // Substitua isso pela sua lógica
+
+                if (errorLogs == null || !errorLogs.Any())
+                {
+                    return NotFound("Nenhum log de erro encontrado.");
+                }
+
+                return Ok(errorLogs);
+            }
+            catch (Exception ex)
+            {
+                // Aqui você pode registrar o erro, se necessário
+                Console.Error.WriteLine($"Erro ao recuperar logs: {ex.Message}");
+
+                return StatusCode(500, "Um erro ocorreu ao recuperar os logs.");
+            }
+        }
+
+        private IEnumerable<string> GetErrorLogs()
+        {
+            // Implemente sua lógica para buscar os logs de erro
+            return new List<string>(); // Exemplo, retorne sua lista real
+        }
+
+        /////
     }
 }
 
