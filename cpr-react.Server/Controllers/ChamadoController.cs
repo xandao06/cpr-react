@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace cpr_react.Server.Controllers
 {
@@ -35,40 +36,24 @@ namespace cpr_react.Server.Controllers
             return CreatedAtAction(nameof(GetChamados), new { id = chamado.Id }, chamado); // Retorna o chamado criado
         }
 
-
-        // LOG DE ERROS
-
-        [HttpGet("error-logs")]
-        public IActionResult ErrorLogs()
+        [HttpPut]
+        public IActionResult UpdateChamado(int id, [FromBody] Chamado updatedChamado)
         {
+            if (updatedChamado == null)
+            {
+                return BadRequest("Chamado não pode ser nulo.");
+            }
             try
             {
-                // Sua lógica para recuperar os logs de erro
-                var errorLogs = GetErrorLogs(); // Substitua isso pela sua lógica
-
-                if (errorLogs == null || !errorLogs.Any())
-                {
-                    return NotFound("Nenhum log de erro encontrado.");
-                }
-
-                return Ok(errorLogs);
+                chamadoService.Update(id, updatedChamado); // Altere para aceitar o chamado atualizado
+                return Ok(updatedChamado); // Retorna o chamado atualizado
             }
-            catch (Exception ex)
+            catch (KeyNotFoundException ex)
             {
-                // Aqui você pode registrar o erro, se necessário
-                Console.Error.WriteLine($"Erro ao recuperar logs: {ex.Message}");
-
-                return StatusCode(500, "Um erro ocorreu ao recuperar os logs.");
+                return NotFound(ex.Message); // Retorna 404 se não encontrado
             }
         }
 
-        private IEnumerable<string> GetErrorLogs()
-        {
-            // Implemente sua lógica para buscar os logs de erro
-            return new List<string>(); // Exemplo, retorne sua lista real
-        }
-
-        /////
     }
 }
 

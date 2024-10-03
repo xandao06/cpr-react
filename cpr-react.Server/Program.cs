@@ -39,21 +39,21 @@ if (app.Environment.IsDevelopment())
 
 //app.UseHttpsRedirection();
 
-app.Use(async (context, next) =>
-{
-    try
-    {
-        await next.Invoke();
-    }
-    catch (Exception ex)
-    {
-        // Aqui você pode registrar o erro, se necessário
-        Console.Error.WriteLine($"Erro: {ex.Message}");
+//app.Use(async (context, next) =>
+//{
+//    try
+//    {
+//        await next.Invoke();
+//    }
+//    catch (Exception ex)
+//    {
+//        // Aqui você pode registrar o erro, se necessário
+//        Console.Error.WriteLine($"Erro: {ex.Message}");
 
-        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-        await context.Response.WriteAsync("Um erro ocorreu. Tente novamente mais tarde.");
-    }
-});
+//        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+//        await context.Response.WriteAsync("Um erro ocorreu. Tente novamente mais tarde.");
+//    }
+//});
 
 app.UseAuthorization();
 
