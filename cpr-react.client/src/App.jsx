@@ -1,10 +1,16 @@
 ﻿import { useEffect, useState } from 'react';
 import './App.css';
-import  ChamadoIndex  from './Chamado/View/ChamadoIndex';
+import ChamadoIndex from './Chamado/View/ChamadoIndex';
+import HistoricoIndex from './Chamado/View/HistoricoIndex';
 import CriarChamado from './Chamado/Modal/CriarChamado';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import { useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 function App() {
+
+    //const goToHistorico = () => {
+    //    window.location.href = '/historico'; // Certifique-se de que a rota está correta
+    //};
 
     const [chamados, getChamados] = useState([]);
     async function GetAllChamadoData() {
@@ -34,24 +40,61 @@ function App() {
         GetAllChamadoData();
     }, []);
 
+    
 
-
-        return (
+    return (
+        <Router>
             <div>
-                <h1 id="tableLabel">Chamados</h1>
-                <p>Lista de chamados</p>
-                <CriarChamado onSubmit={AddChamadoData} />
-                {chamados.length === 0 ? (
-                    <p><em>Nenhum chamado encontrado.</em></p>
-                ) : (
-                        <ChamadoIndex chamados={chamados} />  // Usando o componente da tabela
-                )}
+                <nav>
+                    <button variant="primary"> <Link to="/">Chamados</Link> </button>
+                    <button variant="primary"><Link to="/historico">Histórico de Chamados</Link></button>
+                </nav>
+                <Routes>
+                    <Route path="/" element={<ChamadoIndex chamados={chamados} onAddChamado={AddChamadoData} />} />
+                    <Route path="/historico" element={<HistoricoIndex chamados={chamados} />} />
+                </Routes>
             </div>
-        );
-    }
+        </Router>
+    );
+    
+}
 
 
 
 
-    export default App;
+export default App;
 
+
+
+
+
+//    <Router>
+//    <div>
+
+//        <Routes>
+//            {/*<Route*/}
+//            {/*    path="/"*/}
+//            {/*    element={<ChamadoIndex chamados={chamados} />}*/}
+//            {/*/>*/}
+//            <Route
+//                path="/historico"
+//                element={<HistoricoIndex chamados={chamados} />}
+//            />
+//        </Routes>
+
+
+//        <h1 id="tableLabel">Chamados</h1>
+//        <p>Lista de chamados</p>
+
+//        <CriarChamado onSubmit={AddChamadoData} />
+
+//        {chamados.length === 0 ? (
+//            <p><em>Nenhum chamado encontrado.</em></p>
+//        ) : (
+//            <ChamadoIndex chamados={chamados} />  // Usando o componente da tabela
+//        )}
+//        </div>
+//    </Router>
+
+
+//);

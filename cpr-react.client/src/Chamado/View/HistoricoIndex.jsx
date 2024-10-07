@@ -4,12 +4,19 @@ import CriarChamado from '../Modal/ConcluirChamado';
 import { Button } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ChamadoIndex from './ChamadoIndex';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
 
 function HistoricoIndex({ chamados }) {
+
     return (
+
+
         <div className="container">
+
             <h2>Histórico de Chamados</h2>
-            <Table striped bordered hover>
+            <Table id="historico_table" striped bordered hover>
                 <thead>
                     <tr>
                         <th>Data</th>
@@ -41,4 +48,4 @@ function HistoricoIndex({ chamados }) {
     );
 }
 
-export default Historico;
+export default HistoricoIndex;

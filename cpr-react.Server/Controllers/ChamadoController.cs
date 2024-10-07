@@ -36,7 +36,7 @@ namespace cpr_react.Server.Controllers
             return CreatedAtAction(nameof(GetChamados), new { id = chamado.Id }, chamado); // Retorna o chamado criado
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public IActionResult UpdateChamado(int id, [FromBody] Chamado updatedChamado)
         {
             if (updatedChamado == null)

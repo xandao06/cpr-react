@@ -1,12 +1,13 @@
 #chamados_table {
-    padding: 60px;
-    margin-top:5px;
 }
 
+.container{
+    margin-top:60px;
+}
 
 #new_chamado_btn {
-    display:flex;
-    
+    display: flex;
+    margin-bottom: 5px;
 }
 
 .form-check-input {
