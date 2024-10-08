@@ -10,6 +10,12 @@ function ConcluirChamado({ show, handleClose, chamado, onConcluirChamado }) {
         status: 'Concluído'
     });
 
+    useEffect(() => {
+        if (chamado) {
+            setUpdatedChamado({ ...chamado, status: 'Concluído' });
+        }
+    }, [chamado]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (chamado) {
@@ -28,10 +34,10 @@ function ConcluirChamado({ show, handleClose, chamado, onConcluirChamado }) {
                     <input
                         type="hidden"
                         name="id"
-                        value={updatedChamado.id}
+                        value={updatedChamado?.id || ''}
                     />
                     <p>Tem certeza que deseja concluir o chamado para o cliente <strong>{chamado?.cliente}</strong>?</p>
-                    <button variant="success" type="submit">
+                    <button type="submit">
                         Concluir Chamado
                     </button>
                 </form>

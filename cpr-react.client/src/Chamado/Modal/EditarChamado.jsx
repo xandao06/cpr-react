@@ -1,69 +1,68 @@
 ﻿import React, { useState, useEffect } from 'react';
 import ChamadoIndex from '../View/ChamadoIndex';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { format } from 'date-fns';
 
-function CriarChamado({ show, handleClose, onAddChamado }) {
+function EditarChamado({ show, handleClose, chamado, onEditarChamado }) {
 
-    const [newChamado, setNewChamado] = useState({
+    const [updatedChamado, setUpdatedChamado] = useState({
+        id: '',
         data: '',
         hora: '',
         cliente: '',
         descricao: '',
-        contrato: '',
-        urgencia: '',
-        status: 'Pendente'
+        contrato: 'false',
+        urgencia: 'false',
     });
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setNewChamado(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
-    };
-
     useEffect(() => {
-        if (show) { // Apenas preenche quando o modal está visível
-            const currentDate = new Date();
-            const formattedDate = currentDate.toISOString().split('T')[0]; // yyyy-MM-dd
-            const formattedTime = currentDate.toTimeString().split(' ')[0].substring(0, 5); // HH:mm
-            status: 'Pendente'
-
-            setNewChamado({ // Limpa o formulário
+        if (chamado) {
+            const formattedDate = format(new Date(chamado.data), 'yyyy-MM-dd');
+            setUpdatedChamado({
+                ...chamado,
                 data: formattedDate,
-                hora: formattedTime,
-                cliente: '',
-                descricao: '',
-                contrato: '',
-                urgencia: '',
-                status: 'Pendente'
+                hora: chamado.hora,
+                contrato: chamado.contrato,
+                urgencia: chamado.urgencia 
             });
         }
-    }, [show]); // Dependência para atualizar quando o modal é exibido
+    }, [chamado]);
 
-    const handleSubmit = (e) => {
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setUpdatedChamado({ ...updatedChamado, [name]: value });
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        onAddChamado(newChamado); // Chama a função para adicionar o chamado
-        handleClose(); // Fecha o modal após o envio
+        if (updatedChamado) {
+            await onEditarChamado(updatedChamado);
+            handleClose();
+        }
     };
 
     return (
         <Modal show={show} onHide={handleClose} >
-            <Modal.Header id="modal_criarchamado" closeButton>
-                <Modal.Title>Criar Chamado</Modal.Title>
+            <Modal.Header id="modal_editar_chamado" closeButton>
+                <Modal.Title>Editar Chamado</Modal.Title>
             </Modal.Header>
-            <Modal.Body id="modal_criarchamado">
-                <form onSubmit={handleSubmit}>
+            <Modal.Body id="modal_criar_chamado">
+                <Form onSubmit={handleSubmit}>
                     <div>
+                        <input
+                            type="hidden"
+                            name="id"
+                            value={updatedChamado?.id}
+                            onChange={handleChange}
+                        />
                         <label>Data:</label>
                         <input
                             className="form-control mb-2"
                             type="date"
                             name="data"
-                            value={newChamado.data}
-                            onChange={handleInputChange}
+                            value={updatedChamado?.data || ''}
+                            onChange={handleChange}
                         />
                     </div>
                     <div>
@@ -72,8 +71,8 @@ function CriarChamado({ show, handleClose, onAddChamado }) {
                             className="form-control mb-2"
                             type="time"
                             name="hora"
-                            value={newChamado.hora}
-                            onChange={handleInputChange}
+                            value={updatedChamado?.hora || ''}
+                            onChange={handleChange}
                         />
                     </div>
                     <div>
@@ -82,8 +81,8 @@ function CriarChamado({ show, handleClose, onAddChamado }) {
                             className="form-control mb-2"
                             type="text"
                             name="cliente"
-                            value={newChamado.cliente}
-                            onChange={handleInputChange}
+                            value={updatedChamado?.cliente || ''}
+                            onChange={handleChange}
                         />
                     </div>
                     <div>
@@ -92,8 +91,8 @@ function CriarChamado({ show, handleClose, onAddChamado }) {
                             className="form-control mb-2"
                             type="text"
                             name="descricao"
-                            value={newChamado.descricao}
-                            onChange={handleInputChange}
+                            value={updatedChamado?.descricao || ''}
+                            onChange={handleChange}
                         />
                     </div>
                     <div>
@@ -102,8 +101,9 @@ function CriarChamado({ show, handleClose, onAddChamado }) {
                             className="form-check-input"
                             type="radio"
                             name="contrato"
-                            value={newChamado.contrato, "Sim"}
-                            onChange={handleInputChange}
+                            value="Sim"
+                            checked={updatedChamado.contrato === "Sim"}
+                            onChange={handleChange}
                             id="sim"
                         />
                         <label id="contrato_label">Sim</label>
@@ -111,8 +111,9 @@ function CriarChamado({ show, handleClose, onAddChamado }) {
                             className="form-check-input"
                             type="radio"
                             name="contrato"
-                            value={newChamado.contrato, "Não"}
-                            onChange={handleInputChange}
+                            value="Não"
+                            checked={updatedChamado.contrato === 'Não'}
+                            onChange={handleChange}
                             id="não"
                         />
                         <label id="contrato_label">Não:</label>
@@ -123,8 +124,9 @@ function CriarChamado({ show, handleClose, onAddChamado }) {
                             className="form-check-input"
                             type="radio"
                             name="urgencia"
-                            value={newChamado.urgencia, "Baixa"}
-                            onChange={handleInputChange}
+                            value="Baixa"
+                            checked={updatedChamado.urgencia === 'Baixa'}
+                            onChange={handleChange}
                             id="baixa"
                         />
                         <label id="urgencia_label">Baixa:</label>
@@ -132,8 +134,9 @@ function CriarChamado({ show, handleClose, onAddChamado }) {
                             className="form-check-input"
                             type="radio"
                             name="urgencia"
-                            value={newChamado.urgencia, "Média"}
-                            onChange={handleInputChange}
+                            value="Média"
+                            checked={updatedChamado.urgencia === 'Média'}
+                            onChange={handleChange}
                             id="media"
                         />
                         <label id="urgencia_label">Média:</label>
@@ -141,18 +144,19 @@ function CriarChamado({ show, handleClose, onAddChamado }) {
                             className="form-check-input"
                             type="radio"
                             name="urgencia"
-                            value={newChamado.urgencia}
-                            onChange={handleInputChange}
+                            value="Alta"
+                            checked={updatedChamado.urgencia === 'Alta'}
+                            onChange={handleChange}
                             id="alta"
                         />
                         <label id="urgencia_label">Alta:</label>
                     </div>
 
-                    <button type="submit">Criar chamado</button>
-                </form>
+                    <button type="submit">Editar chamado</button>
+                </Form>
             </Modal.Body>
         </Modal >
     );
 }
 
-export default CriarChamado;
+export default EditarChamado;

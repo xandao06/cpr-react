@@ -6,6 +6,10 @@ import CriarChamado from './Chamado/Modal/CriarChamado';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
+
+
 function App() {
 
     //const goToHistorico = () => {

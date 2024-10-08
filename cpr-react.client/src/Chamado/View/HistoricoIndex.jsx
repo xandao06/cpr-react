@@ -10,6 +10,19 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function HistoricoIndex({ chamados }) {
 
+    const [historicoChamados, setHistoricoChamados] = useState([]);
+
+    useEffect(() => {
+        const fetchHistoricoChamados = async () => {
+            
+                const response = await fetch('https://localhost:7042/api/Chamado');
+                const data = await response.json();
+                setHistoricoChamados(data.filter(chamado => chamado.status === 'Concluído'));
+        };
+
+        fetchHistoricoChamados();
+    }, []);
+
     return (
 
 
@@ -29,9 +42,7 @@ function HistoricoIndex({ chamados }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {chamados
-                        .filter((chamado) => chamado.status === 'Concluído') // Somente chamados concluídos
-                        .map((chamado, index) => (
+                    {historicoChamados.map((chamado, index) => (
                             <tr key={index}>
                                 <td>{new Date(chamado.data).toLocaleDateString()}</td>
                                 <td>{chamado.hora}</td>

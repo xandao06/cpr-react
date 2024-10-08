@@ -21,7 +21,11 @@
     margin-left: 7px;
 }
 
-#modal_criarchamado {
+#modal_criar_chamado {
     background-color: rgb(176,196,222, 80%);
     font-weight:750;
+}
+
+#icon {
+    margin-left:10px;
 }

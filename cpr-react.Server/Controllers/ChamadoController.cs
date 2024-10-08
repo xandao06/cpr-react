@@ -43,15 +43,8 @@ namespace cpr_react.Server.Controllers
             {
                 return BadRequest("Chamado não pode ser nulo.");
             }
-            try
-            {
                 chamadoService.Update(id, updatedChamado); // Altere para aceitar o chamado atualizado
                 return Ok(updatedChamado); // Retorna o chamado atualizado
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message); // Retorna 404 se não encontrado
-            }
         }
 
     }
