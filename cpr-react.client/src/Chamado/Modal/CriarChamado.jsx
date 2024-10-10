@@ -141,7 +141,7 @@ function CriarChamado({ show, handleClose, onAddChamado }) {
                             className="form-check-input"
                             type="radio"
                             name="urgencia"
-                            value={newChamado.urgencia}
+                            value={newChamado.urgencia, "Alta"}
                             onChange={handleInputChange}
                             id="alta"
                         />

@@ -18,13 +18,13 @@ function App() {
 
     const [chamados, getChamados] = useState([]);
     async function GetAllChamadoData() {
-        const response = await fetch('https://localhost:7042/api/Chamado');
+        const response = await fetch('https://192.168.10.230:7042/api/Chamado');
         const data = await response.json();
         getChamados(data); // Atualiza o estado com os dados recebidos
     }
 
     async function AddChamadoData(newChamado) {
-        const response = await fetch('https://localhost:7042/api/Chamado', {
+        const response = await fetch('https://192.168.10.230:7042/api/Chamado', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

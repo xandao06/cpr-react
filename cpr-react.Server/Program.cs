@@ -37,31 +37,21 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
-//app.Use(async (context, next) =>
-//{
-//    try
-//    {
-//        await next.Invoke();
-//    }
-//    catch (Exception ex)
-//    {
-//        // Aqui você pode registrar o erro, se necessário
-//        Console.Error.WriteLine($"Erro: {ex.Message}");
+    Console.WriteLine($"Tunnel URL: {Environment.
+        GetEnvironmentVariable("VS_TUNNEL_URL")}");
+    Console.WriteLine($"API project tunnel URL: {Environment.
+        GetEnvironmentVariable("VS_TUNNEL_URL_MyWebApi")}");
 
-//        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-//        await context.Response.WriteAsync("Um erro ocorreu. Tente novamente mais tarde.");
-//    }
-//});
 
-app.UseAuthorization();
+    app.UseAuthorization();
 
-app.MapControllers();
+    app.MapControllers();
 
-app.MapFallbackToFile("/ChamadoIndex.jsx");
+    app.MapFallbackToFile("/index.html");
 
 
 
-app.Run();
+    app.Run();
 

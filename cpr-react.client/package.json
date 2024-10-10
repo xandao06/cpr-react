@@ -1,6 +1,6 @@
 {
   "name": "cpr-react.client",
-  "private": true,
+  "private": false,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.6.0",
+    "@ngrok/ngrok": "^1.4.1",
     "bootstrap": "^5.3.3",
     "date-fns": "^4.1.0",
     "npm": "^10.8.3",

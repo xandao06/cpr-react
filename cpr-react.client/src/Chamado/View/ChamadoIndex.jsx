@@ -1,14 +1,16 @@
 ﻿import { useEffect, useState } from 'react';
 import '../CSS/ChamadoIndex.css';
-import CriarChamado from '../Modal/CriarChamado';
 import HistoricoIndex from '../View/HistoricoIndex';
 import { Button } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom';
+import CriarChamado from '../Modal/CriarChamado';
 import ConcluirChamado from '../Modal/ConcluirChamado';
 import EditarChamado from '../Modal/EditarChamado';
-import { useNavigate } from 'react-router-dom';
+import DeletarChamado from '../Modal/DeletarChamado';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
 
 
 
@@ -18,8 +20,8 @@ function ChamadoIndex() {
 
 
     const [selectedChamado, setSelectedChamado] = useState(null); // GERAL
+    const [chamados, setChamados] = useState([]);  // GERAL
 
-    const [chamados, setChamados] = useState([]);  // CRIAR
     const [showCriarModal, setShowCriarModal] = useState(false);  // CRIAR
     const handleCloseCriar = () => setShowCriarModal(false); // CRIAR
     const handleShowCriar = () => setShowCriarModal(true); // CRIAR
@@ -38,6 +40,13 @@ function ChamadoIndex() {
         setShowEditarModal(true); // EDITAR
     };
 
+    const [showDeletarModal, setShowDeletarModal] = useState(false); // DELETAR
+    const handleCloseDeletar = () => setShowDeletarModal(false); // DELETAR
+    const handleShowDeletar = (chamado) => { // DELETAR
+        setSelectedChamado(chamado); // DELETAR
+        setShowDeletarModal(true); // DELETAR
+    };
+
     {/* ///// */ }
 
 
@@ -53,11 +62,30 @@ function ChamadoIndex() {
     {/* ///// */ }
 
 
+    {/* //BUSCA DE CHAMADOS// */ }
+
+    useEffect(() => {
+        // Fetch inicial dos chamados (somente pendentes)
+        const fetchChamados = async () => {
+            try {
+                const response = await fetch('https://192.168.10.230:7042/api/Chamado');
+                const data = await response.json();
+                setChamados(data.filter(chamado => chamado.status === "Pendente")); // Filtra apenas chamados pendentes
+            } catch (error) {
+                console.error("Erro ao buscar chamados:", error);
+            }
+        };
+
+        fetchChamados();
+    }, []);
+
+    {/* //// */ }
+
 
     {/* //MEOTODO ADICIONAR CHAMADO/// */ }
 
     const onAddChamado = async (newChamado) => {
-        const response = await fetch('https://localhost:7042/api/Chamado', {
+        const response = await fetch('https://192.168.10.230:7042/api/Chamado', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -88,7 +116,7 @@ function ChamadoIndex() {
 
         console.log("Chamado ID:", chamado.id);
 
-        const response = await fetch(`https://localhost:7042/api/Chamado/${chamado.id}`, {
+        const response = await fetch(`https://192.168.10.230:7042/api/Chamado/${chamado.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -110,7 +138,7 @@ function ChamadoIndex() {
 
         console.log("Chamado ID:", updatedChamado.id);
 
-        const response = await fetch(`https://localhost:7042/api/Chamado/${updatedChamado.id}`, {
+        const response = await fetch(`https://192.168.10.230:7042/api/Chamado/${updatedChamado.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -129,22 +157,50 @@ function ChamadoIndex() {
     {/* ///// */ }
 
 
+
+    {/* ///METODO DELETAR CHAMADO// */ }
+
+    const onDeletarChamado = async (deletarChamado) => {
+
+        console.log("Chamado ID:", deletarChamado.id);
+
+        const response = await fetch(`https://192.168.10.230:7042/api/Chamado/${deletarChamado.id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(deletarChamado),
+
+        });
+
+        if (response.ok) {
+            // Atualiza a lista removendo o chamado concluído
+            setChamados(chamados.filter(c => c.id !== deletarChamado.id));
+            handleCloseDeletar(); // Fecha o modal de conclusão
+        }
+    }
+
+    {/* ///// */ }
+
+
+
+
     {/* //BUSCA DE CHAMADOS// */ }
 
-    useEffect(() => {
-        // Fetch inicial dos chamados (somente pendentes)
-        const fetchChamados = async () => {
-            try {
-                const response = await fetch('https://localhost:7042/api/Chamado');
-                const data = await response.json();
-                setChamados(data.filter(chamado => chamado.status === "Pendente")); // Filtra apenas chamados pendentes
-            } catch (error) {
-                console.error("Erro ao buscar chamados:", error);
-            }
-        };
+    //useEffect(() => {
+    //    // Fetch inicial dos chamados (somente pendentes)
+    //    const fetchChamados = async () => {
+    //        try {
+    //            const response = await fetch('https://192.168.10.230:7042/api/Chamado');
+    //            const data = await response.json();
+    //            setChamados(data.filter(chamado => chamado.status === "Pendente")); // Filtra apenas chamados pendentes
+    //        } catch (error) {
+    //            console.error("Erro ao buscar chamados:", error);
+    //        }
+    //    };
 
-        fetchChamados();
-    }, []);
+    //    fetchChamados();
+    //}, []);
 
     {/* //// */ }
 
@@ -158,9 +214,9 @@ function ChamadoIndex() {
         <div className="container">
             <h2>Chamados</h2>
             <button id="new_chamado_btn" onClick={handleShowCriar}>
-                Criar chamado
+                <img id="adicionar_chamado_img" src="./src/img/adicionar_chamado.PNG"></img>
             </button>
-            <Table id="chamados_table" striped bordered hover aria-labelledby="tableLabel">
+            <Table className="chamados_table" striped bordered hover aria-labelledby="tableLabel">
                 <thead>
                     <tr>
                         <th>Data</th>
@@ -176,24 +232,35 @@ function ChamadoIndex() {
                 <tbody>
                     {chamados
                         .filter(chamado => chamado.status === "Pendente")
+                        .sort((a, b) => {
+                            const prioridade = ["Alta", "Média", "Baixa"];
+                            return prioridade.indexOf(a.urgencia) - prioridade.indexOf(b.urgencia);
+                        })
                         .map((chamado, index) => (
                             <tr key={index}>
                                 <td>{new Date(chamado.data).toLocaleDateString()}</td>
                                 <td>{chamado.hora}</td>
                                 <td>{chamado.cliente}</td>
                                 <td>{chamado.descricao}</td>
-                                <td>{chamado.contrato}</td>
-                                <td>{chamado.urgencia}</td>
+                                <td className={
+                                        chamado.contrato === "Sim" ? "text-primary" : chamado.contrato}
+                                >{chamado.contrato}</td>
+                                <td className={
+                                        chamado.urgencia === "Alta" ? "text-danger" :
+                                        chamado.urgencia === "Média" ? "text-warning" :
+                                        chamado.urgencia === "Baixa" ? "text-success" : chamado.urgencia}
+                                >{chamado.urgencia}
+                                </td>
                                 <td>{chamado.status}</td>
                                 <td>
                                     <a variant="success" onClick={() => handleShowConcluir(chamado)}>
-                                        <i id="icon" className="fa-regular fa-square-check"></i>
+                                        <i id="icon_opcoes" className="fa-regular fa-square-check"></i>
                                     </a>
                                     <a variant="success" onClick={() => handleShowEditar(chamado)}>
-                                        <i id="icon" className="fa-regular fa-pen-to-square"></i>
+                                        <i id="icon_opcoes" className="fa-regular fa-pen-to-square"></i>
                                     </a>
-                                    <a variant="success" onClick={() => handleShowConcluir(chamado)}>
-                                        <i id="icon" className="fa-solid fa-trash"></i>
+                                    <a variant="success" onClick={() => handleShowDeletar(chamado)}>
+                                        <i id="icon_opcoes" className="fa-solid fa-trash"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -224,6 +291,13 @@ function ChamadoIndex() {
                 handleClose={handleCloseEditar}
                 chamado={selectedChamado}
                 onEditarChamado={onEditarChamado}
+            />
+
+            <DeletarChamado
+                show={showDeletarModal}
+                handleClose={handleCloseDeletar}
+                chamado={selectedChamado}
+                onDeletarChamado={onDeletarChamado}
             />
 
             {/* //// */}

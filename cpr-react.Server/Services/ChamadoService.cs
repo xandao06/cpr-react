@@ -52,5 +52,17 @@ namespace cpr_react.Server.Services
             dbContext.SaveChanges();
         }
 
+
+        public void Deletar (int id)
+        {
+
+            var chamado = dbContext.Chamados.Find(id);
+            if(chamado != null)
+            {
+                dbContext.Chamados.Remove(chamado);
+                dbContext.SaveChanges();
+            }
+        }
+
     }
 }

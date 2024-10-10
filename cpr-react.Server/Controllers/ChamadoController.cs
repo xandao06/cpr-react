@@ -47,6 +47,19 @@ namespace cpr_react.Server.Controllers
                 return Ok(updatedChamado); // Retorna o chamado atualizado
         }
 
+        [HttpDelete("{id}")]
+        public IActionResult DeletarChamado(int id)
+        {
+            var chamado = _dbcontext.Chamados.Find(id);
+
+            if (chamado == null)
+            {
+                return NotFound();
+            }
+
+            chamadoService.Deletar(id);
+            return Ok();
+        }
     }
 }
 
