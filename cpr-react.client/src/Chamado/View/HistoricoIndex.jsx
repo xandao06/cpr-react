@@ -1,8 +1,9 @@
 ﻿import { useEffect, useState } from 'react';
-import '../CSS/HistoricoIndex.css';
+import '../CSS/Historico.css';
 import CriarChamado from '../Modal/ConcluirChamado';
 import DeletarChamado from '../Modal/DeletarChamado';
 import { Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ChamadoIndex from '../View/ChamadoIndex';
@@ -23,6 +24,18 @@ function HistoricoIndex() {
         setSelectedChamado(chamado); // DELETAR
         setShowDeletarModal(true); // DELETAR
     };
+
+
+    {/* ///ABERTURA DA VIEW HISTORICO// */ }
+
+    const navigate = useNavigate();
+
+    const goToHistorico = () => {
+        navigate('/historico');
+    }
+
+    {/* ///// */ }
+
 
 
     {/* ///METODO DELETAR CHAMADO// */ }

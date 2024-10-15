@@ -2,6 +2,7 @@
 import './App.css';
 import ChamadoIndex from './Chamado/View/ChamadoIndex';
 import HistoricoIndex from './Chamado/View/HistoricoIndex';
+import EstoqueIndex from './Estoque/View/EstoqueIndex';
 import CriarChamado from './Chamado/Modal/CriarChamado';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
@@ -21,6 +22,14 @@ function App() {
         const response = await fetch('https://192.168.10.230:7042/api/Chamado');
         const data = await response.json();
         getChamados(data); // Atualiza o estado com os dados recebidos
+    }
+
+
+    const [produtos, getProdutos] = useState([]);
+    async function GetAllProdutoData() {
+        const response = await fetch('https://192.168.10.230:7042/api/Estoque');
+        const data = await response.json();
+        getProdutos(data); // Atualiza o estado com os dados recebidos
     }
 
     async function AddChamadoData(newChamado) {
@@ -51,11 +60,13 @@ function App() {
             <div>
                 <nav>
                     <button variant="primary"> <Link to="/">Chamados</Link> </button>
-                    <button variant="primary"><Link to="/historico">Histórico de Chamados</Link></button>
+                    <button variant="primary"><Link to="/historico">Histórico</Link></button>
+                    <button variant="primary"><Link to="/estoque">Estoque</Link></button>
                 </nav>
                 <Routes>
                     <Route path="/" element={<ChamadoIndex chamados={chamados} onAddChamado={AddChamadoData} />} />
                     <Route path="/historico" element={<HistoricoIndex chamados={chamados} />} />
+                    <Route path="/estoque" element={<EstoqueIndex produtos={produtos} />} />
                 </Routes>
             </div>
         </Router>
