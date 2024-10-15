@@ -58,55 +58,6 @@ namespace cpr_react.Server.Migrations
 
                     b.ToTable("Chamados");
                 });
-
-            modelBuilder.Entity("cpr_react.Server.Produto", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CodigoSistema")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DataEntrada")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataSaida")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Descricao")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Marca")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Modelo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nome")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NumeroSerie")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Observacao")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("PrecoCusto")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PrecoVenda")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Quantidade")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Produtos");
-                });
 #pragma warning restore 612, 618
         }
     }
