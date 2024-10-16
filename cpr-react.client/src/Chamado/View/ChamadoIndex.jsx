@@ -1,5 +1,5 @@
 ﻿import { useEffect, useState } from 'react';
-import '../CSS/ChamadoIndex.css';
+import '../CSS/Chamado.css';
 import HistoricoIndex from '../View/HistoricoIndex';
 import { Button } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
@@ -50,30 +50,16 @@ function ChamadoIndex() {
     {/* ///// */ }
 
 
-
-    {/* ///ABERTURA DA VIEW HISTORICO// */ }
-
-    const navigate = useNavigate(); // Hook para navegação
-
-    const goToHistorico = () => {
-        navigate('/historico');
-    }
-
-    {/* ///// */ }
-
-
     {/* //BUSCA DE CHAMADOS// */ }
 
     useEffect(() => {
-        // Fetch inicial dos chamados (somente pendentes)
+
         const fetchChamados = async () => {
-            try {
-                const response = await fetch('https://192.168.10.230:7042/api/Chamado');
-                const data = await response.json();
-                setChamados(data.filter(chamado => chamado.status === "Pendente")); // Filtra apenas chamados pendentes
-            } catch (error) {
-                console.error("Erro ao buscar chamados:", error);
-            }
+            const response = await fetch('https://192.168.10.230:7042/api/Chamado');
+            const data = await response.json();
+            const chamadosOrdenados = data
+
+            setChamados(chamadosOrdenados);
         };
 
         fetchChamados();
@@ -87,10 +73,10 @@ function ChamadoIndex() {
     const onAddChamado = async (newChamado) => {
         const response = await fetch('https://192.168.10.230:7042/api/Chamado', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
             body: JSON.stringify(newChamado),
+            headers: {
+                'Content-Type': 'application/json'
+            }
 
         });
 
@@ -183,30 +169,6 @@ function ChamadoIndex() {
     {/* ///// */ }
 
 
-
-
-    {/* //BUSCA DE CHAMADOS// */ }
-
-    //useEffect(() => {
-    //    // Fetch inicial dos chamados (somente pendentes)
-    //    const fetchChamados = async () => {
-    //        try {
-    //            const response = await fetch('https://192.168.10.230:7042/api/Chamado');
-    //            const data = await response.json();
-    //            setChamados(data.filter(chamado => chamado.status === "Pendente")); // Filtra apenas chamados pendentes
-    //        } catch (error) {
-    //            console.error("Erro ao buscar chamados:", error);
-    //        }
-    //    };
-
-    //    fetchChamados();
-    //}, []);
-
-    {/* //// */ }
-
-
-
-
     {/* TABELA */ }
 
     return (
@@ -231,40 +193,49 @@ function ChamadoIndex() {
                 </thead>
                 <tbody>
                     {chamados
+
                         .filter(chamado => chamado.status === "Pendente")
                         .sort((a, b) => {
-                            const prioridade = ["Alta", "Média", "Baixa"];
+                            const prioridade = ["Alta", "Média", "Baixa"]; // Se necessário
+                            const dataA = new Date(a.data);
+                            const dataB = new Date(b.data);
+
+                            if (dataA > dataB) return -1;
+                            if (dataA < dataB) return 1;
                             return prioridade.indexOf(a.urgencia) - prioridade.indexOf(b.urgencia);
                         })
                         .map((chamado, index) => (
-                            <tr key={index}>
-                                <td>{new Date(chamado.data).toLocaleDateString()}</td>
-                                <td>{chamado.hora}</td>
-                                <td>{chamado.cliente}</td>
-                                <td>{chamado.descricao}</td>
-                                <td className={
-                                        chamado.contrato === "Sim" ? "text-primary" : chamado.contrato}
-                                >{chamado.contrato}</td>
-                                <td className={
-                                        chamado.urgencia === "Alta" ? "text-danger" :
-                                        chamado.urgencia === "Média" ? "text-warning" :
-                                        chamado.urgencia === "Baixa" ? "text-success" : chamado.urgencia}
-                                >{chamado.urgencia}
-                                </td>
-                                <td>{chamado.status}</td>
-                                <td>
-                                    <a variant="success" onClick={() => handleShowConcluir(chamado)}>
-                                        <i id="icon_opcoes" className="fa-regular fa-square-check"></i>
-                                    </a>
-                                    <a variant="success" onClick={() => handleShowEditar(chamado)}>
-                                        <i id="icon_opcoes" className="fa-regular fa-pen-to-square"></i>
-                                    </a>
-                                    <a variant="success" onClick={() => handleShowDeletar(chamado)}>
-                                        <i id="icon_opcoes" className="fa-solid fa-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
+
+                    <tr key={index}>
+                        <td>{new Date(chamado.data).toLocaleDateString()}</td>
+                        <td>{chamado.hora}</td>
+                        <td>{chamado.cliente}</td>
+                        <td>{chamado.descricao}</td>
+                        <td className={
+                            chamado.contrato === "Sim" ? "text-primary" : chamado.contrato}
+                        >{chamado.contrato}</td>
+                        <td className={
+                            chamado.urgencia === "Alta" ? "text-danger" :
+                                chamado.urgencia === "Média" ? "text-warning" :
+                                    chamado.urgencia === "Baixa" ? "text-success" : chamado.urgencia}
+                        >{chamado.urgencia}
+                        </td>
+                        <td>{chamado.status}</td>
+                        <td>
+                            <a variant="success" onClick={() => handleShowConcluir(chamado)}>
+                                <i id="icon_opcoes" className="fa-regular fa-square-check"></i>
+                            </a>
+                            <a variant="success" onClick={() => handleShowEditar(chamado)}>
+                                <i id="icon_opcoes" className="fa-regular fa-pen-to-square"></i>
+                            </a>
+                            <a variant="success" onClick={() => handleShowDeletar(chamado)}>
+                                <i id="icon_opcoes" className="fa-solid fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                       
                         ))}
+
                 </tbody>
             </Table>
 

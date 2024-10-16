@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<ChamadoService>();
+builder.Services.AddScoped<EstoqueService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -38,12 +39,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-    Console.WriteLine($"Tunnel URL: {Environment.
-        GetEnvironmentVariable("VS_TUNNEL_URL")}");
-    Console.WriteLine($"API project tunnel URL: {Environment.
-        GetEnvironmentVariable("VS_TUNNEL_URL_MyWebApi")}");
-
 
     app.UseAuthorization();
 

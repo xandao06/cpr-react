@@ -1,0 +1,11 @@
+.container {
+    margin-top: 60px;
+}
+
+#produto_table {
+    margin-top:5px;
+}
+
+#entradasaida_btn{
+    display:flex;
+}

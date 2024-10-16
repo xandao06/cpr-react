@@ -1,5 +1,5 @@
 ﻿import { useEffect, useState } from 'react';
-import '../CSS/HistoricoIndex.css';
+import '../CSS/Historico.css';
 import CriarChamado from '../Modal/ConcluirChamado';
 import DeletarChamado from '../Modal/DeletarChamado';
 import { Button } from 'react-bootstrap';

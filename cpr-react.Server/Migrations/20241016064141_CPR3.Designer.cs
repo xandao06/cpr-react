@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using cpr_react.Server.Persistence;
 
@@ -11,9 +12,11 @@ using cpr_react.Server.Persistence;
 namespace cpr_react.Server.Migrations
 {
     [DbContext(typeof(CPRDbContext))]
-    partial class CPRDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241016064141_CPR3")]
+    partial class CPR3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
