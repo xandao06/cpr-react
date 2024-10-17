@@ -6,81 +6,104 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { format } from 'date-fns';
 
 function Saida({ show, handleClose, onSaida, produtos }) {
+    const [formError, setFormError] = useState('');
     const [produto, setProduto] = useState({
-        codigosistema: '',
+        codigoSistema: '',
         nome: '',
         marca: '',
         modelo: '',
         quantidade: '',
-        precocusto: '',
-        precovenda: '',
+        precoCusto: '',
+        precoVenda: '',
         descricao: '',
     });
+
+
+    {/* //BUSCA DE PRODUTOS// */ }
 
     useEffect(() => {
         if (show) {
             setProduto({
-                codigosistema: '',
+                codigoSistema: '',
                 nome: '',
                 marca: '',
                 modelo: '',
                 quantidade: '',
-                precocusto: '',
-                precovenda: '',
+                precoCusto: '',
+                precoVenda: '',
                 descricao: '',
             });
         }
     }, [show]);
 
+    {/* //// */ }
+
+
+    {/* //METODO QUE PUXA O PRODUTO PELO NOME// */ }
+
+    const formatCurrency = (value) => {
+        const number = value.replace(/\D/g, '');
+        const formattedValue = (parseInt(number, 10) / 100).toFixed(2);
+        return new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+        }).format(formattedValue);
+    };
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
-        setProduto({ ...produto, [name]: value });
+
+        if (name === 'precoCusto' || name === 'precoVenda') {
+            // Formata o valor como moeda
+            setProduto({ ...produto, [name]: formatCurrency(value) });
+        } else {
+            setProduto({ ...produto, [name]: value });
+        }
 
         if (name === 'nome') {
-            // Busca o produto pelo nome
             const produtoEncontrado = produtos.find(prod => prod.nome.toLowerCase() === value.toLowerCase());
             if (produtoEncontrado) {
-                setProduto(produtoEncontrado); // Atualiza o estado com o produto encontrado
+                setProduto({
+                    ...produtoEncontrado,
+                    precoCusto: formatCurrency(produtoEncontrado.precoCusto.toString()), // formata para exibição
+                    precoVenda: formatCurrency(produtoEncontrado.precoVenda.toString()), // formata para exibição
+                });
             } else {
-                // Se não encontrado, reseta os campos adicionais
                 setProduto(prevState => ({
                     ...prevState,
+                    codigoSistema: '',
                     marca: '',
                     modelo: '',
                     quantidade: '',
-                    precocusto: '',
-                    precovenda: '',
+                    precoCusto: '',
+                    precoVenda: '',
                     descricao: '',
                 }));
             }
         }
     };
 
-
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSaida(produto); // Chama a função de entrada/saída passando o produto atualizado
+        // Remove o formato antes de enviar
+        const produtoParaEnviar = {
+            ...produto,
+            precoCusto: produto.precoCusto
+                ? parseFloat(produto.precoCusto.replace(/[^0-9,-]+/g, "").replace(",", "."))
+                : null, // ou 0, dependendo do que você prefere
+            precoVenda: produto.precoVenda
+                ? parseFloat(produto.precoVenda.replace(/[^0-9,-]+/g, "").replace(",", "."))
+                : null, // ou 0
+        };
+        onSaida(produtoParaEnviar);
         handleClose();
     };
 
-    //const handleEntradaSaida = (novoProduto) => {
-    //    // Lógica para manipular a entrada ou saída
-    //    console.log('Produto adicionado/atualizado:', novoProduto);
+    {/* //// */ }
 
-    //    // Atualiza a lista de produtos, dependendo se é novo ou existente
-    //    setProduto(prevProdutos => {
-    //        const exists = prevProdutos.find(prod => prod.nome === novoProduto.nome);
-    //        if (exists) {
-    //            return prevProdutos.map(prod => prod.nome === novoProduto.nome ? novoProduto : prod);
-    //        }
-    //        return [...prevProdutos, novoProduto];
-    //    });
-    //    handleClose(); // Fecha o modal após a ação
-    //};
 
- 
+
+    {/* //MODAL// */ }
 
         return (
             <Modal show={show} onHide={handleClose} >
@@ -88,6 +111,7 @@ function Saida({ show, handleClose, onSaida, produtos }) {
                     <Modal.Title>Entrada ou Saida</Modal.Title>
                 </Modal.Header>
                 <Modal.Body id="modal_entradasaida">
+                    {formError && <p style={{ color: 'red' }}>{formError}</p>}
                     <form onSubmit={handleSubmit}>
                         <div>
                             <label>Código no Sistema:</label>
@@ -95,7 +119,7 @@ function Saida({ show, handleClose, onSaida, produtos }) {
                                 className="form-control mb-2"
                                 type="text"
                                 name="codigoSistema"
-                                value={produto.codigosistema}
+                                value={produto?.codigoSistema || ''}
                                 onChange={handleInputChange}
                             />
                         </div>
@@ -105,7 +129,7 @@ function Saida({ show, handleClose, onSaida, produtos }) {
                                 className="form-control mb-2"
                                 type="text"
                                 name="nome"
-                                value={produto.nome}
+                                value={produto?.nome || ''}
                                 onChange={handleInputChange}
                             />
                         </div>
@@ -115,7 +139,7 @@ function Saida({ show, handleClose, onSaida, produtos }) {
                                 className="form-control mb-2"
                                 type="text"
                                 name="marca"
-                                value={produto.marca}
+                                value={produto?.marca || ''}
                                 onChange={handleInputChange}
                             />
                         </div>
@@ -125,7 +149,7 @@ function Saida({ show, handleClose, onSaida, produtos }) {
                                 className="form-control mb-2"
                                 type="text"
                                 name="modelo"
-                                value={produto.modelo}
+                                value={produto?.modelo || ''}
                                 onChange={handleInputChange}
                             />
                         </div>
@@ -135,7 +159,7 @@ function Saida({ show, handleClose, onSaida, produtos }) {
                                 className="form-control mb-2"
                                 type="text"
                                 name="quantidade"
-                                value={produto.quantidade}
+                                value={produto?.quantidade || ''}
                                 onChange={handleInputChange}
                             />
                         </div>
@@ -145,7 +169,7 @@ function Saida({ show, handleClose, onSaida, produtos }) {
                                 className="form-control mb-2"
                                 type="text"
                                 name="precoCusto"
-                                value={produto.precocusto}
+                                value={produto?.precoCusto || ''}
                                 onChange={handleInputChange}
                             />
                         </div>
@@ -154,8 +178,8 @@ function Saida({ show, handleClose, onSaida, produtos }) {
                             <input
                                 className="form-control mb-2"
                                 type="text"
-                                name="precovenda"
-                                value={produto.precovenda}
+                                name="precoVenda"
+                                value={produto?.precoVenda || ''}
                                 onChange={handleInputChange}
                             />
                         </div>
@@ -165,30 +189,11 @@ function Saida({ show, handleClose, onSaida, produtos }) {
                                 className="form-control mb-2"
                                 type="text"
                                 name="descricao"
-                                value={produto.descricao}
+                                value={produto?.descricao || ''}
                                 onChange={handleInputChange}
                             />
                         </div>
-                        {/*<div>*/}
-                        {/*    <label>Entrada:</label>*/}
-                        {/*    <input*/}
-                        {/*        className="form-check-input"*/}
-                        {/*        type="radio"*/}
-                        {/*        name="entradaSaida"*/}
-                        {/*        value={produto.entradaousaida, "Entrada"}*/}
-                        {/*        onChange={handleInputChange}*/}
-                        {/*        id="entrada"*/}
-                        {/*    />*/}
-                        {/*    <label>Saída:</label>*/}
-                        {/*    <input*/}
-                        {/*        className="form-check-input"*/}
-                        {/*        type="radio"*/}
-                        {/*        name="entradaSaida"*/}
-                        {/*        value={produto.entradaousaida, "Saída"}*/}
-                        {/*        onChange={handleInputChange}*/}
-                        {/*        id="saida"*/}
-                        {/*    /> */}
-                        {/*</div>*/}
+                       
 
                         <button type="submit">Salvar</button>
                     </form>

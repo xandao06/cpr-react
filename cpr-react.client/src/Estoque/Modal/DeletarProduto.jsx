@@ -20,7 +20,7 @@ function DeletarProduto({ show, handleClose, produto, onDeletarProduto }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (deletarProduto) {
-            await setDeletarProduto(deletarProduto);
+            await onDeletarProduto(deletarProduto);
             handleClose();
         }
     };
@@ -28,7 +28,7 @@ function DeletarProduto({ show, handleClose, produto, onDeletarProduto }) {
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Deletar Chamado</Modal.Title>
+                <Modal.Title>Deletar Produto</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <form onSubmit={handleSubmit}>
@@ -39,7 +39,7 @@ function DeletarProduto({ show, handleClose, produto, onDeletarProduto }) {
                     />
                     <p>Tem certeza que deseja deletar o chamado do cliente <strong>{produto?.nome}</strong>?</p>
                     <button type="submit">
-                        Deletar Chamado
+                        Deletar Produto
                     </button>
                 </form>
             </Modal.Body>

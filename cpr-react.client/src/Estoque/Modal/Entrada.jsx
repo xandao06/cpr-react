@@ -12,8 +12,8 @@ function Entrada({ show, handleClose, onEntrada, produtos }) {
         marca: '',
         modelo: '',
         quantidade: '',
-        precocusto: '',
-        precovenda: '',
+        precoCusto: '',
+        precoVenda: '',
         descricao: '',
     });
 
@@ -27,37 +27,52 @@ function Entrada({ show, handleClose, onEntrada, produtos }) {
                 marca: '',
                 modelo: '',
                 quantidade: '',
-                precocusto: '',
-                precovenda: '',
+                precoCusto: '',
+                precoVenda: '',
                 descricao: '',
             });
         }
     }, [show]);
 
-    {/* //// */ }
-
 
     {/* //METODO QUE PUXA O PRODUTO PELO NOME// */ }
 
+    const formatCurrency = (value) => {
+        const number = value.replace(/\D/g, '');
+        const formattedValue = (parseInt(number, 10) / 100).toFixed(2);
+        return new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+        }).format(formattedValue);
+    };
+
     const handleInputChange = (event) => {
         const { name, value } = event.target;
-        setProduto({ ...produto, [name]: value });
+
+        if (name === 'precoCusto' || name === 'precoVenda') {
+            // Formata o valor como moeda
+            setProduto({ ...produto, [name]: formatCurrency(value) });
+        } else {
+            setProduto({ ...produto, [name]: value });
+        }
 
         if (name === 'nome') {
-            // Busca o produto pelo nome
             const produtoEncontrado = produtos.find(prod => prod.nome.toLowerCase() === value.toLowerCase());
             if (produtoEncontrado) {
-                setProduto(produtoEncontrado); // Atualiza o estado com o produto encontrado
+                setProduto({
+                    ...produtoEncontrado,
+                    precoCusto: formatCurrency(produtoEncontrado.precoCusto.toString()), // formata para exibição
+                    precoVenda: formatCurrency(produtoEncontrado.precoVenda.toString()), // formata para exibição
+                });
             } else {
-                // Se não encontrado, reseta os campos adicionais
                 setProduto(prevState => ({
                     ...prevState,
-                    codigosistema: '',
+                    codigoSistema: '',
                     marca: '',
                     modelo: '',
                     quantidade: '',
-                    precocusto: '',
-                    precovenda: '',
+                    precoCusto: '',
+                    precoVenda: '',
                     descricao: '',
                 }));
             }
@@ -66,7 +81,17 @@ function Entrada({ show, handleClose, onEntrada, produtos }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onEntrada(produto); // Chama a função de entrada/saída passando o produto atualizado
+        // Remove o formato antes de enviar
+        const produtoParaEnviar = {
+            ...produto,
+            precoCusto: produto.precoCusto
+                ? parseFloat(produto.precoCusto.replace(/[^0-9,-]+/g, "").replace(",", "."))
+                : null, // ou 0, dependendo do que você prefere
+            precoVenda: produto.precoVenda
+                ? parseFloat(produto.precoVenda.replace(/[^0-9,-]+/g, "").replace(",", "."))
+                : null, // ou 0
+        };
+        onEntrada(produtoParaEnviar);
         handleClose();
     };
 
@@ -88,8 +113,8 @@ function Entrada({ show, handleClose, onEntrada, produtos }) {
                             <input
                                 className="form-control mb-2"
                                 type="text"
-                                name="codigosistema"
-                                value={produto?.codigosistema || ''}
+                                name="codigoSistema"
+                                value={produto?.codigoSistema || ''}
                                 onChange={handleInputChange}
                             />
                         </div>
@@ -137,9 +162,9 @@ function Entrada({ show, handleClose, onEntrada, produtos }) {
                             <label>Preço de custo:</label>
                             <input
                                 className="form-control mb-2"
-                                type="number"
-                                name="precocusto"
-                                value={produto?.precocusto || ''}
+                                type="text"
+                                name="precoCusto"
+                                value={produto?.precoCusto || ''}
                                 onChange={handleInputChange}
                             />
                         </div>
@@ -147,9 +172,9 @@ function Entrada({ show, handleClose, onEntrada, produtos }) {
                             <label>Preço de venda:</label>
                             <input
                                 className="form-control mb-2"
-                                type="number"
-                                name="precovenda"
-                                value={produto?.precovenda || ''}
+                                type="text"
+                                name="precoVenda"
+                                value={produto?.precoVenda || ''}
                                 onChange={handleInputChange}
                             />
                         </div>

@@ -15,6 +15,7 @@ function EstoqueIndex() {
 
     const [selectedProduto, setSelectedProduto] = useState(null); // GERAL
     const [produtos, setProdutos] = useState([]);  // GERAL
+    const [formError, setFormError] = useState('');
 
     const [showEntradaModal, setShowEntradaModal] = useState(false); // ENTRADA
     const handleShowEntrada = () => setShowEntradaModal(true); // ENTRADA
@@ -27,6 +28,7 @@ function EstoqueIndex() {
     const [showDeletarModal, setShowDeletarModal] = useState(false); // DELETAR
     const handleCloseDeletar = () => setShowDeletarModal(false); // DELETAR
     const handleShowDeletar = (produto) => { // DELETAR
+        setSelectedProduto(produto); // DELETAR
         setShowDeletarModal(true); // DELETAR
     };
 
@@ -47,7 +49,7 @@ function EstoqueIndex() {
             const response = await fetch('https://192.168.10.230:7042/api/Estoque');
             const data = await response.json();
 
-            setProdutos(data); // Filtra apenas chamados pendentes
+            setProdutos(data); 
         }
 
 
@@ -59,11 +61,12 @@ function EstoqueIndex() {
 
     {/* //FUNÇÃO DO MODAL ENTRADA// */ }
 
+
     const handleEntrada = async (produto) => {
-        console.log("Produto ID:", produto.id);
-        const method = 'POST';
-        const url = 'https://192.168.10.230:7042/api/Estoque/AddOuUpdateEntrada';
-            
+        const method = produto.id ? 'PUT' : 'POST';
+        const url = produto.id
+            ? `https://192.168.10.230:7042/api/Estoque/UpdateEntrada/${produto.id}`
+            : 'https://192.168.10.230:7042/api/Estoque/AddEntrada';
 
         const response = await fetch(url, {
             method,
@@ -75,10 +78,25 @@ function EstoqueIndex() {
 
         if (response.ok) {
             const novoProduto = await response.json();
-            setProdutos((prevProdutos) => [...prevProdutos, novoProduto]); // Atualiza a lista de produtos
+            setProdutos((prevProdutos) => {
+                
+                const produtoIndex = prevProdutos.findIndex(p => p.id === novoProduto.id);
+
+                if (produtoIndex !== -1) {
+                    
+                    const produtosAtualizados = [...prevProdutos];
+                    produtosAtualizados[produtoIndex] = novoProduto;
+                    return produtosAtualizados;
+                } else {
+                    
+                    return [...prevProdutos, novoProduto];
+                }
+            });
+        } else {
+            console.error('Erro ao realizar a operação:', response.statusText);
         }
 
-        handleCloseEntrada(); // Fecha o modal após a ação
+        handleCloseEntrada(); 
     };
 
     {/* //// */ }
@@ -87,32 +105,37 @@ function EstoqueIndex() {
     {/* //FUNÇÃO DO MODAL SAIDA// */ }
 
     const handleSaida = async (produto) => {
-        const method = produto.id ? 'PUT' : 'POST'; // Se o produto tiver um ID, atualiza; caso contrário, cria.
-        const url = produto.id
-            ? `https://192.168.10.230:7042/api/Estoque/${produto.id}` // URL para atualizar
-            : 'https://192.168.10.230:7042/api/Estoque/AddOuUpdateEntrada'; // URL para criar
+        try {
+            const response = await fetch(`https://192.168.10.230:7042/api/Estoque/UpdateSaida/${produto.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(produto),
+            });
 
-        const response = await fetch(url, {
-            method,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(produto),
-        });
+            if (response.status === 404) {
+                throw new Error('Produto não encontrado no banco de dados.');
+            }
 
-        if (response.ok) {
-            const novoProduto = await response.json();
-            console.log('Produto adicionado/atualizado:', novoProduto);
-            onSaida(novoProduto); // Atualiza a lista de produtos
-        } else {
-            console.error('Erro ao adicionar/atualizar produto:', response.statusText);
-            // Aqui você pode tratar erros, como exibir uma mensagem para o usuário
+            if (response.ok) {
+                const updatedProduto = await response.json();
+
+                setProdutos((prevProdutos) =>
+                    prevProdutos.map((p) => (p.id === updatedProduto.id ? updatedProduto : p))
+                );
+
+                setFormError(''); 
+                handleCloseSaida();
+            }
+        } catch (error) {
+            
+            setFormError(error.message); 
         }
-
-        handleCloseSaida(); // Fecha o modal após a ação
     };
 
-    {/* //// */ }
+    {/* ///// */ }
+
 
 
     {/* ///METODO DELETAR CHAMADO// */ }
@@ -131,14 +154,25 @@ function EstoqueIndex() {
         });
 
         if (response.ok) {
-            // Atualiza a lista removendo o chamado concluído
+            
             setProdutos(produtos.filter(c => c.id !== deletarProduto.id));
-            handleCloseDeletar(); // Fecha o modal de conclusão
+            handleCloseDeletar(); 
         }
     }
 
     {/* ///// */ }
 
+
+
+    {/* //FUNÇÃO QUE FORMATA DECIMAL EM R$// */ }
+
+    const formatarPreco = (valor) => {
+        if (valor === null || valor === undefined) return "R$0,00"; 
+
+        return `R$${valor.toFixed(2).replace(".", ",")}`; 
+    };
+
+    {/* ///// */ }
 
 
     {/* TABELA */ }
@@ -169,13 +203,13 @@ function EstoqueIndex() {
                 <tbody>
                     {produtos.map((produto, index) => (
                         <tr key={index}>
-                            <td>{produto.codigosistema}</td>
+                            <td>{produto.codigoSistema}</td>
                             <td>{produto.nome}</td>
                             <td>{produto.marca}</td>
                             <td>{produto.modelo}</td>
                             <td>{produto.quantidade}</td>
-                            <td>{produto.precocusto}</td>
-                            <td>{produto.precovenda}</td>
+                            <td>{formatarPreco(produto.precoCusto)}</td>
+                            <td>{formatarPreco(produto.precoVenda)}</td>
                             <td>{produto.descricao}</td>
                             <td>
                                 <a variant="success" onClick={() => handleShowDeletar(produto)}>

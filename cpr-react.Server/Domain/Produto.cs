@@ -12,8 +12,8 @@ namespace cpr_react.Server
         public string? Marca { get; set; }
         public string? Modelo { get; set; }
         public int? Quantidade { get; set; }
-        public int? PrecoCusto { get; set; }
-        public int? PrecoVenda { get; set; }
+        public decimal? PrecoCusto { get; set; }
+        public decimal? PrecoVenda { get; set; }
         public string? Descricao { get; set; }
         public string? Observacao { get; set; }
         public string? EntradaOuSaida { get; set; }

@@ -43,32 +43,8 @@ namespace cpr_react.Server.Controllers
             return Ok();
         }
 
-
-        [HttpPost("AddOuUpdateEntrada")]
-        public async Task<IActionResult> AddOuUpdate(int id, [FromBody] Produto produto)
-        {
-
-            var produtoExistente = await _dbcontext.Produtos
-            .FirstOrDefaultAsync(p => p.Nome != null && p.Nome.ToLower() == produto.Nome!.ToLower());
-
-            if (produtoExistente != null)
-            {
-                estoqueService.UpdateEntrada(id, produto);
-            }
-
-            else
-            {
-                await _dbcontext.Produtos.AddAsync(produto);
-            }
-
-            await _dbcontext.SaveChangesAsync();
-
-            return Ok(produto);
-        }
-
-
-        [HttpPut("UpdateSaida")]
-        public async Task<IActionResult> UpdateSaida(int id, [FromBody] Produto produto)
+        [HttpPost("AddEntrada")]
+        public async Task<IActionResult> AddEntrada([FromBody] Produto produto)
         {
             if (produto == null)
             {
@@ -76,31 +52,40 @@ namespace cpr_react.Server.Controllers
             }
 
             var produtoExistente = await _dbcontext.Produtos
-            .FirstOrDefaultAsync(p => p.Nome != null && p.Nome.ToLower() == produto.Nome!.ToLower());
+                .FirstOrDefaultAsync(p => p.Nome != null && p.Nome.ToLower() == produto.Nome!.ToLower());
+
             if (produtoExistente != null)
             {
-                // Atualiza as propriedades do produto existente
-                produtoExistente.CodigoSistema = produto.CodigoSistema; // Exemplo: apenas soma a quantidade
-                produtoExistente.Marca = produto.Marca; // Exemplo: apenas soma a quantidade
-                produtoExistente.Modelo = produto.Modelo; // Exemplo: apenas soma a quantidade
-                produtoExistente.Quantidade -= produto.Quantidade; // Exemplo: apenas soma a quantidade
-                produtoExistente.PrecoCusto = produto.PrecoCusto; // Atualiza o preço de custo
-                produtoExistente.PrecoVenda = produto.PrecoVenda; // Atualiza o preço de venda
-                produtoExistente.Descricao = produto.Descricao; // Atualiza a descrição
-                // Atualize outras propriedades conforme necessário
-
-                _dbcontext.Produtos.Update(produtoExistente);
-            }
-            else
-            {
-                // Adiciona um novo produto
-                await _dbcontext.Produtos.AddAsync(produto);
+                return Conflict("Produto com o mesmo nome já existe.");
             }
 
+            await _dbcontext.Produtos.AddAsync(produto);
             await _dbcontext.SaveChangesAsync();
 
             return Ok(produto);
         }
+
+
+
+        [HttpPut("UpdateEntrada/{id}")]
+        public async Task<IActionResult> UpdateEntrada(int id, [FromBody] Produto produto)
+        {
+            // Chama o serviço para atualizar o produto
+           var produtoAtualizado = await estoqueService.UpdateEntradaProduto(id, produto);
+
+            return Ok(produtoAtualizado);
+        }
+        
+        
+        [HttpPut("UpdateSaida/{id}")]
+        public async Task<IActionResult> UpdateSaida(int id, [FromBody] Produto produto)
+        {
+            // Chama o serviço para atualizar o produto
+           var produtoAtualizado = await estoqueService.UpdateSaidaProduto(id, produto);
+
+            return Ok(produtoAtualizado);
+        }
+
 
     }
 }

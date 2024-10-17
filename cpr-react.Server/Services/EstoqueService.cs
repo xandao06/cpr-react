@@ -29,27 +29,49 @@ namespace cpr_react.Server.Services
             dbContext.SaveChanges();
         }
 
-        public void UpdateEntrada(int id, Produto updatedProduto)
+        public async Task<Produto> UpdateEntradaProduto(int id, Produto updatedProduto)
         {
-            // Localiza o chamado existente no banco de dados
-            Produto? produto = dbContext.Set<Produto>().Find(id);
+            Produto? produto = await dbContext.Set<Produto>().FindAsync(id);
 
             if (produto == null)
             {
                 throw new KeyNotFoundException($"Chamado com ID {id} não encontrado.");
             }
 
-            // Atualiza as propriedades do chamado existente
-            produto.CodigoSistema = updatedProduto.CodigoSistema; // Exemplo de atualização
-            produto.Marca = updatedProduto.Marca; // Exemplo de atualização
-            produto.Modelo = updatedProduto.Modelo; // Exemplo de atualização
-            produto.Quantidade += updatedProduto.Quantidade; // Exemplo de atualização
-            produto.PrecoCusto = updatedProduto.PrecoCusto; // Exemplo de atualização
-            produto.PrecoVenda = updatedProduto.PrecoVenda; // Exemplo de atualização
-            produto.Descricao = updatedProduto.Descricao; // Exemplo de atualização
+            produto.CodigoSistema = updatedProduto.CodigoSistema; 
+            produto.Marca = updatedProduto.Marca;
+            produto.Modelo = updatedProduto.Modelo; 
+            produto.Quantidade += updatedProduto.Quantidade;
+            produto.PrecoCusto = updatedProduto.PrecoCusto;
+            produto.PrecoVenda = updatedProduto.PrecoVenda; 
+            produto.Descricao = updatedProduto.Descricao; 
 
-            // Salva as alterações no banco de dados
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
+
+            return produto;
+        }
+        
+        
+        public async Task<Produto> UpdateSaidaProduto(int id, Produto updatedProduto)
+        {
+            Produto? produto = await dbContext.Set<Produto>().FindAsync(id);
+
+            if (produto == null)
+            {
+                throw new KeyNotFoundException($"Chamado com ID {id} não encontrado.");
+            }
+
+            produto.CodigoSistema = updatedProduto.CodigoSistema; 
+            produto.Marca = updatedProduto.Marca;
+            produto.Modelo = updatedProduto.Modelo; 
+            produto.Quantidade -= updatedProduto.Quantidade;
+            produto.PrecoCusto = updatedProduto.PrecoCusto;
+            produto.PrecoVenda = updatedProduto.PrecoVenda; 
+            produto.Descricao = updatedProduto.Descricao; 
+
+            await dbContext.SaveChangesAsync();
+
+            return produto;
         }
 
 
