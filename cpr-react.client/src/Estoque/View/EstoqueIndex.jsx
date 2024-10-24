@@ -1,14 +1,11 @@
 ﻿import { useEffect, useState } from 'react';
 import '../CSS/Estoque.css';
-import { Button } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
-import ChamadoIndex from '../../Chamado/View/ChamadoIndex';
 import Entrada from '../Modal/Entrada';
 import Saida from '../Modal/Saida';
 import DeletarProduto from '../Modal/DeletarProduto';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 
 function EstoqueIndex() {
@@ -32,6 +29,8 @@ function EstoqueIndex() {
         setShowDeletarModal(true); // DELETAR
     };
 
+    const apiBaseUrl = `${window.location.protocol}//${window.location.hostname}:7042/api/Estoque`;
+
     {/* //ROTA PARA ESTOQUE INDEX// */ }
 
     const navigate = useNavigate();
@@ -46,7 +45,7 @@ function EstoqueIndex() {
     useEffect(() => {
         const fetchProdutos = async () => {
 
-            const response = await fetch('https://192.168.10.230:7042/api/Estoque');
+            const response = await fetch(`${apiBaseUrl}`);
             const data = await response.json();
 
             setProdutos(data); 
@@ -65,8 +64,8 @@ function EstoqueIndex() {
     const handleEntrada = async (produto) => {
         const method = produto.id ? 'PUT' : 'POST';
         const url = produto.id
-            ? `https://192.168.10.230:7042/api/Estoque/UpdateEntrada/${produto.id}`
-            : 'https://192.168.10.230:7042/api/Estoque/AddEntrada';
+            ? `${apiBaseUrl}/UpdateEntrada/${produto.id}`
+            : `${apiBaseUrl}/AddEntrada`;
 
         const response = await fetch(url, {
             method,
@@ -106,7 +105,7 @@ function EstoqueIndex() {
 
     const handleSaida = async (produto) => {
         try {
-            const response = await fetch(`https://192.168.10.230:7042/api/Estoque/UpdateSaida/${produto.id}`, {
+            const response = await fetch(`${apiBaseUrl}/UpdateSaida/${produto.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -144,7 +143,7 @@ function EstoqueIndex() {
 
         console.log("Chamado ID:", deletarProduto.id);
 
-        const response = await fetch(`https://192.168.10.230:7042/api/Estoque/${deletarProduto.id}`, {
+        const response = await fetch(`${apiBaseUrl}/${deletarProduto.id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

@@ -14,7 +14,7 @@
 //{/* //MEOTODO ADICIONAR CHAMADO/// */ }
 
 //const onAddChamado = async (newChamado) => {
-//    const response = await fetch('https://192.168.10.230:7042/api/Chamado', {
+//    const response = await fetch('https://${apiBaseUrl}', {
 //        method: 'POST',
 //        headers: {
 //            'Content-Type': 'application/json',
@@ -45,7 +45,7 @@
 
 //    console.log("Chamado ID:", chamado.id);
 
-//    const response = await fetch(`https://192.168.10.230:7042/api/Chamado/${chamado.id}`, {
+//    const response = await fetch(`https://${apiBaseUrl}/${chamado.id}`, {
 //        method: 'PUT',
 //        headers: {
 //            'Content-Type': 'application/json',
@@ -67,7 +67,7 @@
 
 //    console.log("Chamado ID:", updatedChamado.id);
 
-//    const response = await fetch(`https://192.168.10.230:7042/api/Chamado/${updatedChamado.id}`, {
+//    const response = await fetch(`https://${apiBaseUrl}/${updatedChamado.id}`, {
 //        method: 'PUT',
 //        headers: {
 //            'Content-Type': 'application/json',
@@ -93,7 +93,7 @@
 
 //    console.log("Chamado ID:", deletarChamado.id);
 
-//    const response = await fetch(`https://192.168.10.230:7042/api/Chamado/${deletarChamado.id}`, {
+//    const response = await fetch(`https://${apiBaseUrl}/${deletarChamado.id}`, {
 //        method: 'DELETE',
 //        headers: {
 //            'Content-Type': 'application/json',

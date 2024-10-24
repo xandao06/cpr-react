@@ -1,15 +1,11 @@
 ﻿import { useEffect, useState } from 'react';
 import '../CSS/Chamado.css';
-import HistoricoIndex from '../View/HistoricoIndex';
-import { Button } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from 'react-router-dom';
 import CriarChamado from '../Modal/CriarChamado';
 import ConcluirChamado from '../Modal/ConcluirChamado';
 import EditarChamado from '../Modal/EditarChamado';
 import DeletarChamado from '../Modal/DeletarChamado';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 
 
@@ -47,6 +43,8 @@ function ChamadoIndex() {
         setShowDeletarModal(true); // DELETAR
     };
 
+    const apiBaseUrl = `${window.location.protocol}//${window.location.hostname}:7042/api/Chamado`;
+
     {/* ///// */ }
 
 
@@ -55,7 +53,7 @@ function ChamadoIndex() {
     useEffect(() => {
 
         const fetchChamados = async () => {
-            const response = await fetch('https://192.168.10.230:7042/api/Chamado');
+            const response = await fetch(`${apiBaseUrl}`);
             const data = await response.json();
             const chamadosOrdenados = data
 
@@ -71,7 +69,7 @@ function ChamadoIndex() {
     {/* //MEOTODO ADICIONAR CHAMADO/// */ }
 
     const onAddChamado = async (newChamado) => {
-        const response = await fetch('https://192.168.10.230:7042/api/Chamado', {
+        const response = await fetch(`${apiBaseUrl}`, {
             method: 'POST',
             body: JSON.stringify(newChamado),
             headers: {
@@ -102,7 +100,7 @@ function ChamadoIndex() {
 
         console.log("Chamado ID:", chamado.id);
 
-        const response = await fetch(`https://192.168.10.230:7042/api/Chamado/${chamado.id}`, {
+        const response = await fetch(`${apiBaseUrl}/${chamado.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -124,7 +122,7 @@ function ChamadoIndex() {
 
         console.log("Chamado ID:", updatedChamado.id);
 
-        const response = await fetch(`https://192.168.10.230:7042/api/Chamado/${updatedChamado.id}`, {
+        const response = await fetch(`${apiBaseUrl}/${updatedChamado.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -150,7 +148,7 @@ function ChamadoIndex() {
 
         console.log("Chamado ID:", deletarChamado.id);
 
-        const response = await fetch(`https://192.168.10.230:7042/api/Chamado/${deletarChamado.id}`, {
+        const response = await fetch(`${apiBaseUrl}/${deletarChamado.id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

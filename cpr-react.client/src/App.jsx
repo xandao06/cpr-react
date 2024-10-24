@@ -1,11 +1,9 @@
-﻿import { useEffect, useState } from 'react';
+﻿import { useState } from 'react';
 import './App.css';
 import ChamadoIndex from './Chamado/View/ChamadoIndex';
 import EstoqueIndex from './Estoque/View/EstoqueIndex';
 import HistoricoIndex from './Chamado/View/HistoricoIndex';
-import CriarChamado from './Chamado/Modal/CriarChamado';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from 'react-router-dom';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
@@ -15,14 +13,14 @@ function App() {
 
     const [chamados, getChamados] = useState([]);
     async function GetAllChamadoData() {
-        const response = await fetch('https://192.168.10.230:7042/api/Chamado');
+        const response = await fetch(`https://${apiBaseUrl}`);
         const data = await response.json();
         getChamados(data); // Atualiza o estado com os dados recebidos
     }
 
     const [produtos, getProdutos] = useState([]);
     async function GetAllProdutoData() {
-        const response = await fetch('https://192.168.10.230:7042/api/Estoque');
+        const response = await fetch(`https://${dynamicIP}:7042/api/Estoque`);
         const data = await response.json();
         getProdutos(data); // Atualiza o estado com os dados recebidos
     }

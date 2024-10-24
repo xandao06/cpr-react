@@ -1,12 +1,8 @@
 ﻿import { useEffect, useState } from 'react';
 import '../CSS/Historico.css';
-import CriarChamado from '../Modal/ConcluirChamado';
 import DeletarChamado from '../Modal/DeletarChamado';
-import { Button } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ChamadoIndex from '../View/ChamadoIndex';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 
 function HistoricoIndex() {
@@ -24,6 +20,8 @@ function HistoricoIndex() {
         setShowDeletarModal(true); // DELETAR
     };
 
+    const apiBaseUrl = `${window.location.protocol}//${window.location.hostname}:7042/api/Chamado`;
+
 
     {/* ///METODO DELETAR CHAMADO// */ }
 
@@ -31,7 +29,8 @@ function HistoricoIndex() {
 
         console.log("Chamado ID:", deletarChamado.id);
 
-        const response = await fetch(`https://192.168.10.230:7042/api/Chamado/${deletarChamado.id}`, {
+        const response = await fetch(`https://
+        /${deletarChamado.id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -53,7 +52,7 @@ function HistoricoIndex() {
     useEffect(() => {
         // Fetch inicial dos chamados (somente pendentes)
         const fetchHistoricoChamados = async () => {
-            const response = await fetch('https://192.168.10.230:7042/api/Chamado');
+            const response = await fetch(`${apiBaseUrl}`);
                 const data = await response.json();
                 setHistoricoChamados(data.filter(chamado => chamado.status === "Concluído")); // Filtra apenas chamados pendentes
         };
