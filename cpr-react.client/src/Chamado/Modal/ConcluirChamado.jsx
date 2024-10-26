@@ -1,8 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
-import ChamadoIndex from '../View/ChamadoIndex';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { format } from 'date-fns';
 
 function ConcluirChamado({ show, handleClose, chamado, onConcluirChamado }) {
     const [updatedChamado, setUpdatedChamado] = useState({

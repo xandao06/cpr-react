@@ -2,24 +2,30 @@
 import '../CSS/Estoque.css';
 import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import Entrada from '../Modal/Entrada';
 import Saida from '../Modal/Saida';
 import DeletarProduto from '../Modal/DeletarProduto';
+import {
+    fetchProdutos,
+    handleEntrada,
+    handleSaida,
+    formatarPreco,
+    deletarProduto
+} from '../../Components/EstoqueComponent';
 
 
 function EstoqueIndex() {
 
+    {/* REFERENCIAS */ }
+
     const [selectedProduto, setSelectedProduto] = useState(null); // GERAL
     const [produtos, setProdutos] = useState([]);  // GERAL
-    const [formError, setFormError] = useState('');
 
     const [showEntradaModal, setShowEntradaModal] = useState(false); // ENTRADA
-    const handleShowEntrada = () => setShowEntradaModal(true); // ENTRADA
     const handleCloseEntrada = () => setShowEntradaModal(false);  // ENTRADA 
 
     const [showSaidaModal, setShowSaidaModal] = useState(false); // SAIDA
-    const handleShowSaida = () => setShowSaidaModal(true); // SAIDA
     const handleCloseSaida = () => setShowSaidaModal(false);  // SAIDA
 
     const [showDeletarModal, setShowDeletarModal] = useState(false); // DELETAR
@@ -29,148 +35,58 @@ function EstoqueIndex() {
         setShowDeletarModal(true); // DELETAR
     };
 
-    {/* //ROTA PARA ESTOQUE INDEX// */ }
+    {/* ///// */ }
 
-    const navigate = useNavigate();
-    const goToEstoque = () => {
-        navigate('/estoque');
-    }
 
-    {/* //// */ }
-
-    {/* //BUSCA DE CHAMADOS// */ }
+    {/* BUSCA OS CHAMADOS */ }
 
     useEffect(() => {
-        const fetchProdutos = async () => {
-
-            const response = await fetch('https://192.168.10.230:7042/api/Estoque');
-            const data = await response.json();
-
-            setProdutos(data); 
-        }
-
-
-        fetchProdutos();
+        const loadProdutos = async () => {
+            const data = await fetchProdutos();
+            setProdutos(data);
+        };
+        loadProdutos();
     }, []);
 
-    {/* //// */ }
 
+    {/* MODAL ENTRADA */ }
 
-    {/* //FUNÇÃO DO MODAL ENTRADA// */ }
-
-
-    const handleEntrada = async (produto) => {
-        const method = produto.id ? 'PUT' : 'POST';
-        const url = produto.id
-            ? `https://192.168.10.230:7042/api/Estoque/UpdateEntrada/${produto.id}`
-            : 'https://192.168.10.230:7042/api/Estoque/AddEntrada';
-
-        const response = await fetch(url, {
-            method,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(produto),
-        });
-
-        if (response.ok) {
-            const novoProduto = await response.json();
+    const onHandleEntrada = async (produto) => {
+        const data = await handleEntrada(produto);
+        if (data) {
             setProdutos((prevProdutos) => {
-                
-                const produtoIndex = prevProdutos.findIndex(p => p.id === novoProduto.id);
-
+                const produtoIndex = prevProdutos.findIndex(p => p.id === data.id);
                 if (produtoIndex !== -1) {
-                    
                     const produtosAtualizados = [...prevProdutos];
-                    produtosAtualizados[produtoIndex] = novoProduto;
+                    produtosAtualizados[produtoIndex] = data;
                     return produtosAtualizados;
                 } else {
-                    
-                    return [...prevProdutos, novoProduto];
+                    return [...prevProdutos, data];
                 }
             });
-        } else {
-            console.error('Erro ao realizar a operação:', response.statusText);
         }
-
-        handleCloseEntrada(); 
+        setShowEntradaModal(false);
     };
 
-    {/* //// */ }
+    {/* MODAL SAIDA */ }
 
-
-    {/* //FUNÇÃO DO MODAL SAIDA// */ }
-
-    const handleSaida = async (produto) => {
-        try {
-            const response = await fetch(`https://192.168.10.230:7042/api/Estoque/UpdateSaida/${produto.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(produto),
-            });
-
-            if (response.status === 404) {
-                throw new Error('Produto não encontrado no banco de dados.');
-            }
-
-            if (response.ok) {
-                const updatedProduto = await response.json();
-
-                setProdutos((prevProdutos) =>
-                    prevProdutos.map((p) => (p.id === updatedProduto.id ? updatedProduto : p))
-                );
-
-                setFormError(''); 
-                handleCloseSaida();
-            }
-        } catch (error) {
-            
-            setFormError(error.message); 
+    const onHandleSaida = async (produto) => {
+        const data = await handleSaida(produto);
+        if (data) {
+            setProdutos((prevProdutos) =>
+                prevProdutos.map((p) => (p.id === data.id ? data : p))
+            );
         }
+        setShowSaidaModal(false);
     };
 
-    {/* ///// */ }
+    {/* MODAL DELETAR */ }
 
-
-
-    {/* ///METODO DELETAR CHAMADO// */ }
-
-    const onDeletarProduto = async (deletarProduto) => {
-
-        console.log("Chamado ID:", deletarProduto.id);
-
-        const response = await fetch(`https://192.168.10.230:7042/api/Estoque/${deletarProduto.id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(deletarProduto),
-
-        });
-
-        if (response.ok) {
-            
-            setProdutos(produtos.filter(c => c.id !== deletarProduto.id));
-            handleCloseDeletar(); 
-        }
-    }
-
-    {/* ///// */ }
-
-
-
-    {/* //FUNÇÃO QUE FORMATA DECIMAL EM R$// */ }
-
-    const formatarPreco = (valor) => {
-        if (valor === null || valor === undefined) return "R$0,00"; 
-
-        return `R$${valor.toFixed(2).replace(".", ",")}`; 
+    const onDeletarProduto = async (produto) => {
+        const success = await deletarProduto(produto);
+        if (success) setProdutos((prevProdutos) => prevProdutos.filter((p) => p.id !== produto.id));
+        setShowDeletarModal(false);
     };
-
-    {/* ///// */ }
-
 
     {/* TABELA */ }
 
@@ -220,19 +136,17 @@ function EstoqueIndex() {
 
             {/* ///// */}
 
-            {/* ///REFERENCIA DOS MODAIS/// */}
-
             <Entrada
                 show={showEntradaModal}
                 handleClose={handleCloseEntrada}
-                onEntrada={handleEntrada}
+                onEntrada={onHandleEntrada}
                 produtos={produtos}
             />
 
             <Saida
                 show={showSaidaModal}
                 handleClose={handleCloseSaida}
-                onSaida={handleSaida}
+                onSaida={onHandleSaida}
                 produtos={produtos}
             />
 
@@ -243,10 +157,7 @@ function EstoqueIndex() {
                 onDeletarProduto={onDeletarProduto}
             />
 
-            {/* ///// */}
         </div>
     );
-
 }
-
 export default EstoqueIndex;

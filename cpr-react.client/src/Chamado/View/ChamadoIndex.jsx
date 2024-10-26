@@ -6,17 +6,17 @@ import CriarChamado from '../Modal/CriarChamado';
 import ConcluirChamado from '../Modal/ConcluirChamado';
 import EditarChamado from '../Modal/EditarChamado';
 import DeletarChamado from '../Modal/DeletarChamado';
-import { HubConnectionBuilder, LogLevel, HubConnection } from "@microsoft/signalr";
-//import '../../../lib/microsoft/signalr/dist/browser/signalr.js'
-//import '../src/poll.js';
-
-
-
-
-{/* REFERENCIAS */ }
+import {
+    fetchChamados,
+    addChamado,
+    concluirChamado,
+    editarChamado,
+    deletarChamado
+} from '../../Components/ChamadoComponent';
 
 function ChamadoIndex() {
 
+{/* REFERENCIAS */ }
 
     const [selectedChamado, setSelectedChamado] = useState(null); // GERAL
     const [chamados, setChamados] = useState([]);  // GERAL
@@ -66,136 +66,51 @@ function ChamadoIndex() {
     {/* ///// */ }
 
 
-    {/* //BUSCA DE CHAMADOS// */ }
+
+    {/* BUSCA OS CHAMADOS */ }
 
     useEffect(() => {
-
-        const fetchChamados = async () => {
-            const response = await fetch('https://192.168.10.230:7042/api/Chamado');
-            const data = await response.json();
-            const chamadosOrdenados = data
-
-            setChamados(chamadosOrdenados);
+        const loadChamados = async () => {
+            const data = await fetchChamados();
+            setChamados(data);
         };
-
-        fetchChamados();
+        loadChamados();
     }, []);
 
-    {/* //// */ }
-
-
-    {/* //MEOTODO ADICIONAR CHAMADO/// */ }
+    {/* ADICIONA CHAMADO */ }
 
     const onAddChamado = async (newChamado) => {
-        const response = await fetch('https://192.168.10.230:7042/api/Chamado', {
-            method: 'POST',
-            body: JSON.stringify(newChamado),
-            headers: {
-                'Content-Type': 'application/json'
-            }
+        const data = await addChamado(newChamado);
+        if (data) setChamados([...chamados, data]);
+        setShowCriarModal(false);
+    };
 
-        });
-
-        const responseText = await response.text();
-        const data = responseText ? JSON.parse(responseText) : null;
-        try {
-            const conexao = new HubConnectionBuilder()
-                .configureLogging(LogLevel.Information)
-                .build();
-            conexao.on("CriarChamado", () => {
-                alert('chamado adicionado');
-            });
-
-            await conexao.start();
-            await conexao.invoke("CriarChamado", pedido);
-            alert('Pedido Efetuado com sucesso');
-        } catch (e) {
-            console.log(e);
-        }
-        if (data) {
-            setChamados([...chamados, data]); // Atualiza a lista de chamados
-            handleCloseCriar(); // Fecha o modal de criação
-            console.log("Chamado adicionado:", data);
-        }
-    }
-    
-
-    {/* ///// */ }
-
-
-
-    {/* ///METODO CONCLUIR CHAMADO// */ }
+    {/* CONCLUI CHAMADO */ }
 
     const onConcluirChamado = async (chamado) => {
-        const updatedChamado = { ...chamado, status: 'Concluído' };
+        const success = await concluirChamado(chamado);
+        if (success) setChamados(chamados.filter(c => c.id !== chamado.id));
+        setShowConcluirModal(false);
+    };
 
-        console.log("Chamado ID:", chamado.id);
-
-        const response = await fetch(`https://192.168.10.230:7042/api/Chamado/${chamado.id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(updatedChamado),
-
-        });
-
-        if (response.ok) {
-            // Atualiza a lista removendo o chamado concluído
-            setChamados(chamados.filter(c => c.id !== chamado.id));
-            handleCloseConcluir(); // Fecha o modal de conclusão
-        }
-    }
-
-    {/* ///METODO EDITAR CHAMADO// */ }
+    {/* EDITA CHAMADO */ }
 
     const onEditarChamado = async (updatedChamado) => {
-
-        console.log("Chamado ID:", updatedChamado.id);
-
-        const response = await fetch(`https://192.168.10.230:7042/api/Chamado/${updatedChamado.id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(updatedChamado),
-
-        });
-
-        if (response.ok) {
-            // Atualiza a lista removendo o chamado concluído
-            setChamados(chamados.map(c => (c.id === updatedChamado.id ? updatedChamado : c)));
-            handleCloseEditar(); // Fecha o modal de conclusão
+        const success = await editarChamado(updatedChamado);
+        if (success) {
+            setChamados(chamados.map(c => c.id === updatedChamado.id ? updatedChamado : c));
+            setShowEditarModal(false);
         }
-    }
+    };
 
-    {/* ///// */ }
+    {/* DELETA CHAMADO */ }
 
+    const onDeletarChamado = async (chamado) => {
+        const success = await deletarChamado(chamado);
+        if (success) setChamados(chamados.filter(c => c.id !== chamado.id));
+        setShowDeletarModal(false);
+    };
 
-
-    {/* ///METODO DELETAR CHAMADO// */ }
-
-    const onDeletarChamado = async (deletarChamado) => {
-
-        console.log("Chamado ID:", deletarChamado.id);
-
-        const response = await fetch(`https://192.168.10.230:7042/api/Chamado/${deletarChamado.id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(deletarChamado),
-
-        });
-
-        if (response.ok) {
-            // Atualiza a lista removendo o chamado concluído
-            setChamados(chamados.filter(c => c.id !== deletarChamado.id));
-            handleCloseDeletar(); // Fecha o modal de conclusão
-        }
-    }
-
-    {/* ///// */ }
 
     
 
