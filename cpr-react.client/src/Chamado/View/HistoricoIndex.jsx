@@ -1,12 +1,8 @@
 ﻿import { useEffect, useState } from 'react';
 import '../CSS/Historico.css';
-import CriarChamado from '../Modal/ConcluirChamado';
 import DeletarChamado from '../Modal/DeletarChamado';
-import { Button } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ChamadoIndex from '../View/ChamadoIndex';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 
 function HistoricoIndex() {

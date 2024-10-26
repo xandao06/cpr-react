@@ -1,14 +1,11 @@
 ﻿import { useEffect, useState } from 'react';
 import '../CSS/Estoque.css';
-import { Button } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
-import ChamadoIndex from '../../Chamado/View/ChamadoIndex';
 import Entrada from '../Modal/Entrada';
 import Saida from '../Modal/Saida';
 import DeletarProduto from '../Modal/DeletarProduto';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 
 function EstoqueIndex() {

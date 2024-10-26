@@ -1,9 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
-import ChamadoIndex from '../../Chamado/View/ChamadoIndex';
-import EstoqueIndex from '../View/EstoqueIndex';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { format } from 'date-fns';
 
 function Saida({ show, handleClose, onSaida, produtos }) {
     const [formError, setFormError] = useState('');
@@ -65,8 +62,9 @@ function Saida({ show, handleClose, onSaida, produtos }) {
             if (produtoEncontrado) {
                 setProduto({
                     ...produtoEncontrado,
-                    precoCusto: formatCurrency(produtoEncontrado.precoCusto.toString()), // formata para exibição
-                    precoVenda: formatCurrency(produtoEncontrado.precoVenda.toString()), // formata para exibição
+                    precoCusto: formatCurrency(produtoEncontrado.precoCusto.toString()), 
+                    precoVenda: formatCurrency(produtoEncontrado.precoVenda.toString()), 
+                    quantidade: '',
                 });
             } else {
                 setProduto(prevState => ({

@@ -1,9 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
-import ChamadoIndex from '../../Chamado/View/ChamadoIndex';
-import EstoqueIndex from '../View/EstoqueIndex';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { format } from 'date-fns';
 
 function Entrada({ show, handleClose, onEntrada, produtos }) {
     const [produto, setProduto] = useState({
@@ -61,8 +58,9 @@ function Entrada({ show, handleClose, onEntrada, produtos }) {
             if (produtoEncontrado) {
                 setProduto({
                     ...produtoEncontrado,
-                    precoCusto: formatCurrency(produtoEncontrado.precoCusto.toString()), // formata para exibição
-                    precoVenda: formatCurrency(produtoEncontrado.precoVenda.toString()), // formata para exibição
+                    precoCusto: formatCurrency(produtoEncontrado.precoCusto.toString()),
+                    precoVenda: formatCurrency(produtoEncontrado.precoVenda.toString()),
+                    quantidade: '',
                 });
             } else {
                 setProduto(prevState => ({
@@ -188,26 +186,6 @@ function Entrada({ show, handleClose, onEntrada, produtos }) {
                                 onChange={handleInputChange}
                             />
                         </div>
-                        {/*<div>*/}
-                        {/*    <label>Entrada:</label>*/}
-                        {/*    <input*/}
-                        {/*        className="form-check-input"*/}
-                        {/*        type="radio"*/}
-                        {/*        name="entradaSaida"*/}
-                        {/*        value={produto.entradaousaida, "Entrada"}*/}
-                        {/*        onChange={handleInputChange}*/}
-                        {/*        id="entrada"*/}
-                        {/*    />*/}
-                        {/*    <label>Saída:</label>*/}
-                        {/*    <input*/}
-                        {/*        className="form-check-input"*/}
-                        {/*        type="radio"*/}
-                        {/*        name="entradaSaida"*/}
-                        {/*        value={produto.entradaousaida, "Saída"}*/}
-                        {/*        onChange={handleInputChange}*/}
-                        {/*        id="saida"*/}
-                        {/*    /> */}
-                        {/*</div>*/}
 
                         <button type="submit">Salvar</button>
                     </form>

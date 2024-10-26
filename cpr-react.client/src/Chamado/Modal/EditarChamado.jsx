@@ -1,6 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
-import ChamadoIndex from '../View/ChamadoIndex';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { format } from 'date-fns';
 

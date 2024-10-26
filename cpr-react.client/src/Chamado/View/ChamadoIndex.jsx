@@ -1,15 +1,14 @@
 ﻿import { useEffect, useState } from 'react';
 import '../CSS/Chamado.css';
-import HistoricoIndex from '../View/HistoricoIndex';
-import { Button } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from 'react-router-dom';
 import CriarChamado from '../Modal/CriarChamado';
 import ConcluirChamado from '../Modal/ConcluirChamado';
 import EditarChamado from '../Modal/EditarChamado';
 import DeletarChamado from '../Modal/DeletarChamado';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HubConnectionBuilder, LogLevel, HubConnection } from "@microsoft/signalr";
+//import '../../../lib/microsoft/signalr/dist/browser/signalr.js'
+//import '../src/poll.js';
 
 
 
@@ -21,6 +20,7 @@ function ChamadoIndex() {
 
     const [selectedChamado, setSelectedChamado] = useState(null); // GERAL
     const [chamados, setChamados] = useState([]);  // GERAL
+    const [conn, setConn] = useState([]);
 
     const [showCriarModal, setShowCriarModal] = useState(false);  // CRIAR
     const handleCloseCriar = () => setShowCriarModal(false); // CRIAR
@@ -46,6 +46,22 @@ function ChamadoIndex() {
         setSelectedChamado(chamado); // DELETAR
         setShowDeletarModal(true); // DELETAR
     };
+
+    const iniciarConexao = async () => {
+        const conexao = new HubConnectionBuilder()
+            .withUrl('https://192.168.10.230:7042/chamado')
+            .configureLogging(LogLevel.Information)
+            .build();
+
+        conexao.on("ReceiveMessage", (chamado) => {
+            setChamados(chamados => [...chamados, chamado]);
+        });
+        await conexao.start();
+        setConn(conexao);
+    }
+
+
+
 
     {/* ///// */ }
 
@@ -82,14 +98,27 @@ function ChamadoIndex() {
 
         const responseText = await response.text();
         const data = responseText ? JSON.parse(responseText) : null;
+        try {
+            const conexao = new HubConnectionBuilder()
+                .configureLogging(LogLevel.Information)
+                .build();
+            conexao.on("CriarChamado", () => {
+                alert('chamado adicionado');
+            });
 
+            await conexao.start();
+            await conexao.invoke("CriarChamado", pedido);
+            alert('Pedido Efetuado com sucesso');
+        } catch (e) {
+            console.log(e);
+        }
         if (data) {
             setChamados([...chamados, data]); // Atualiza a lista de chamados
             handleCloseCriar(); // Fecha o modal de criação
             console.log("Chamado adicionado:", data);
         }
-
     }
+    
 
     {/* ///// */ }
 
@@ -168,12 +197,14 @@ function ChamadoIndex() {
 
     {/* ///// */ }
 
+    
 
     {/* TABELA */ }
 
     return (
 
         <div className="container">
+            <button hidden={!!conn} onClick={() => { iniciarConexao(); }}>Teste</button>
             <h2>Chamados</h2>
             <button id="new_chamado_btn" onClick={handleShowCriar}>
                 <img id="adicionar_chamado_img" src="./src/img/adicionar_chamado.PNG"></img>
