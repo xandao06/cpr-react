@@ -46,7 +46,7 @@ function EditarChamado({ show, handleClose, chamado, onEditarChamado }) {
             <Modal.Header id="modal_editar_chamado" closeButton>
                 <Modal.Title>Editar Chamado</Modal.Title>
             </Modal.Header>
-            <Modal.Body id="modal_criar_chamado">
+            <Modal.Body id="modal_editar_chamado">
                 <Form onSubmit={handleSubmit}>
                     <div>
                         <input
@@ -151,7 +151,7 @@ function EditarChamado({ show, handleClose, chamado, onEditarChamado }) {
                         <label id="urgencia_label">Alta:</label>
                     </div>
 
-                    <button type="submit">Editar chamado</button>
+                    <button type="submit">Salvar</button>
                 </Form>
             </Modal.Body>
         </Modal >

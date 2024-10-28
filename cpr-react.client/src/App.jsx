@@ -3,6 +3,7 @@ import './App.css';
 import ChamadoIndex from './Chamado/View/ChamadoIndex';
 import EstoqueIndex from './Estoque/View/EstoqueIndex';
 import HistoricoIndex from './Chamado/View/HistoricoIndex';
+import ConsignadoIndex from './Consignado/View/ConsignadoIndex';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -12,8 +13,6 @@ import { HubConnectionBuilder } from '@microsoft/signalr';
 
 
 function App() {
-
-
 
     //constructor(props) {
     //    super(props);
@@ -50,13 +49,6 @@ function App() {
     //    });
     //}
 
-
-    
-
-
-
-
-
     const [chamados, getChamados] = useState([]);
     async function GetAllChamadoData() {
         const response = await fetch(`https://${apiBaseUrl}`);
@@ -71,6 +63,13 @@ function App() {
         getProdutos(data); // Atualiza o estado com os dados recebidos
     }
 
+    const [equipamentos, getEquipamentos] = useState([]);
+    async function GetAllConsignadoData() {
+        const response = await fetch(`https://${dynamicIP}:7042/api/Consignado`);
+        const data = await response.json();
+        getConsignados(data); // Atualiza o estado com os dados recebidos
+    }
+
 
     return (
         <Router>
@@ -79,11 +78,13 @@ function App() {
                     <button variant="primary"> <Link to="/">Chamados</Link> </button>
                     <button variant="primary"><Link to="/historico">Histórico de Chamados</Link></button>
                     <button variant="primary"><Link to="/estoque">Estoque</Link></button>
+                    <button variant="primary"><Link to="/consignado">Consignados</Link></button>
                 </nav>
                 <Routes>
                     <Route path="/" element={<ChamadoIndex chamados={chamados} />} />
                     <Route path="/historico" element={<HistoricoIndex chamados={chamados} />} />
                     <Route path="/estoque" element={<EstoqueIndex produtos={produtos} />} />
+                    <Route path="/consignado" element={<ConsignadoIndex equipamentos={equipamentos} />} />
                 </Routes>
             </div>
         </Router>

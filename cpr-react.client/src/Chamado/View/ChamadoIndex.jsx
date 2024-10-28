@@ -47,18 +47,18 @@ function ChamadoIndex() {
         setShowDeletarModal(true); // DELETAR
     };
 
-    const iniciarConexao = async () => {
-        const conexao = new HubConnectionBuilder()
-            .withUrl('https://192.168.10.230:7042/chamado')
-            .configureLogging(LogLevel.Information)
-            .build();
+    //const iniciarConexao = async () => {
+    //    const conexao = new HubConnectionBuilder()
+    //        .withUrl('https://192.168.10.230:7042/chamado')
+    //        .configureLogging(LogLevel.Information)
+    //        .build();
 
-        conexao.on("ReceiveMessage", (chamado) => {
-            setChamados(chamados => [...chamados, chamado]);
-        });
-        await conexao.start();
-        setConn(conexao);
-    }
+    //    conexao.on("ReceiveMessage", (chamado) => {
+    //        setChamados(chamados => [...chamados, chamado]);
+    //    });
+    //    await conexao.start();
+    //    setConn(conexao);
+    //}
 
 
 

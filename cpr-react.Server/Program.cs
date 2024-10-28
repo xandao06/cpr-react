@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<ChamadoService>();
 builder.Services.AddScoped<EstoqueService>();
+builder.Services.AddScoped<ConsignadoService>();
 builder.Services.AddSignalR();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -18,13 +19,11 @@ options.UseSqlServer("name=ConnectionStrings:CPRConnectionString"));
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
-        builder => builder.WithOrigins("https://192.168.10.230:5173", "https://localhost:5173")
+        builder => builder.WithOrigins("https://${dynamicIP}:5173", "https://localhost:5173")
                           .AllowAnyMethod()
                           .AllowAnyHeader()
                           .AllowCredentials());
 });
-
-
 
 var app = builder.Build();
 

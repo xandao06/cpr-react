@@ -31,7 +31,6 @@ namespace cpr_react.Server.Services
 
         public void Update(int id, Chamado updatedChamado)
         {
-            // Localiza o chamado existente no banco de dados
             Chamado? chamado = dbContext.Set<Chamado>().Find(id);
 
             if (chamado == null)
@@ -39,16 +38,14 @@ namespace cpr_react.Server.Services
                 throw new KeyNotFoundException($"Chamado com ID {id} não encontrado.");
             }
 
-            // Atualiza as propriedades do chamado existente
-            chamado.Data = updatedChamado.Data; // Exemplo de atualização
-            chamado.Hora = updatedChamado.Hora; // Exemplo de atualização
-            chamado.Cliente = updatedChamado.Cliente; // Exemplo de atualização
-            chamado.Descricao = updatedChamado.Descricao; // Exemplo de atualização
-            chamado.Contrato = updatedChamado.Contrato; // Exemplo de atualização
-            chamado.Urgencia = updatedChamado.Urgencia; // Exemplo de atualização
-            chamado.Status = updatedChamado.Status; // Exemplo de atualização
+            chamado.Data = updatedChamado.Data; 
+            chamado.Hora = updatedChamado.Hora; 
+            chamado.Cliente = updatedChamado.Cliente; 
+            chamado.Descricao = updatedChamado.Descricao; 
+            chamado.Contrato = updatedChamado.Contrato; 
+            chamado.Urgencia = updatedChamado.Urgencia; 
+            chamado.Status = updatedChamado.Status; 
 
-            // Salva as alterações no banco de dados
             dbContext.SaveChanges();
         }
 

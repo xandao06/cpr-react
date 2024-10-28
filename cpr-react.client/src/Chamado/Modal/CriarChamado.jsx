@@ -49,10 +49,10 @@ function CriarChamado({ show, handleClose, onAddChamado }) {
 
     return (
         <Modal show={show} onHide={handleClose} >
-            <Modal.Header id="modal_criarchamado" closeButton>
+            <Modal.Header closeButton>
                 <Modal.Title>Criar Chamado</Modal.Title>
             </Modal.Header>
-            <Modal.Body id="modal_criarchamado">
+            <Modal.Body id="modal_criar_chamado">
                 <form onSubmit={handleSubmit}>
                     <div>
                         <label>Data:</label>

@@ -2,23 +2,22 @@
 import { Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function DeletarConsignado({ show, handleClose, equipamento, onDeletarConsignado }) {
-
-    const [deletarConsignado, setDeletarConsignado] = useState({
-        ...equipamento
+function ConcluirConsignado({ show, handleClose, equipamento, onConcluirConsignado }) {
+    const [updatedEquipamento, setUpdatedEquipamento] = useState({
+        ...equipamento,
+        status: 'Concluído'
     });
 
     useEffect(() => {
         if (equipamento) {
-            setDeletarConsignado({ ...equipamento });
+            setUpdatedEquipamento({ ...equipamento, status: 'Concluído' });
         }
     }, [equipamento]);
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (deletarConsignado) {
-            await onDeletarConsignado(deletarConsignado);
+        if (equipamento) {
+            await onConcluirConsignado(updatedEquipamento);
             handleClose();
         }
     };
@@ -26,18 +25,18 @@ function DeletarConsignado({ show, handleClose, equipamento, onDeletarConsignado
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Deletar Consignado</Modal.Title>
+                <Modal.Title>Concluir Consignado</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <form onSubmit={handleSubmit}>
                     <input
                         type="hidden"
                         name="id"
-                        value={deletarConsignado?.id || ''}
+                        value={updatedEquipamento?.id || ''}
                     />
-                    <p>Tem certeza que deseja deletar o Consignado do cliente <strong>{equipamento?.cliente}</strong>?</p>
+                    <p>Tem certeza que deseja concluir o consignado para o cliente <strong>{equipamento?.cliente}</strong>?</p>
                     <button type="submit">
-                        Deletar Consignado
+                        Concluir Consignado
                     </button>
                 </form>
             </Modal.Body>
@@ -45,4 +44,4 @@ function DeletarConsignado({ show, handleClose, equipamento, onDeletarConsignado
     );
 }
 
-export default DeletarConsignado;
+export default ConcluirConsignado;
