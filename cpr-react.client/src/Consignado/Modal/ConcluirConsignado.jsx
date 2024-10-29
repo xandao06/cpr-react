@@ -3,24 +3,23 @@ import { Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function ConcluirConsignado({ show, handleClose, equipamento, onConcluirConsignado }) {
-    const [updatedEquipamento, setUpdatedEquipamento] = useState({
-        ...equipamento,
-        status: 'Concluído'
-    });
+
+    const [status, setStatus] = useState('Concluído');
 
     useEffect(() => {
         if (equipamento) {
-            setUpdatedEquipamento({ ...equipamento, status: 'Concluído' });
+            setStatus('Concluído');
         }
     }, [equipamento]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (equipamento) {
-            await onConcluirConsignado(updatedEquipamento);
+            await onConcluirConsignado({ ...equipamento, status });
             handleClose();
         }
     };
+
 
     return (
         <Modal show={show} onHide={handleClose}>
@@ -29,11 +28,6 @@ function ConcluirConsignado({ show, handleClose, equipamento, onConcluirConsigna
             </Modal.Header>
             <Modal.Body>
                 <form onSubmit={handleSubmit}>
-                    <input
-                        type="hidden"
-                        name="id"
-                        value={updatedEquipamento?.id || ''}
-                    />
                     <p>Tem certeza que deseja concluir o consignado para o cliente <strong>{equipamento?.cliente}</strong>?</p>
                     <button type="submit">
                         Concluir Consignado

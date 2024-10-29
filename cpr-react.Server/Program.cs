@@ -19,10 +19,9 @@ options.UseSqlServer("name=ConnectionStrings:CPRConnectionString"));
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
-        builder => builder.WithOrigins("https://${dynamicIP}:5173", "https://localhost:5173")
+        builder => builder.AllowAnyOrigin()
                           .AllowAnyMethod()
-                          .AllowAnyHeader()
-                          .AllowCredentials());
+                          .AllowAnyHeader());
 });
 
 var app = builder.Build();

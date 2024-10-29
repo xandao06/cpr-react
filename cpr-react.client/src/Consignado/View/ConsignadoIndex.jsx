@@ -13,7 +13,9 @@ import {
     addConsignado,
     concluirConsignado,
     editarConsignado,
-    deletarConsignado
+    deletarConsignado,
+    formatarPreco,
+    gerarPdf
 } from '../../Components/ConsignadoComponent';
 
 
@@ -85,7 +87,8 @@ function ConsignadoIndex() {
 
     const onConcluirConsignado = async (equipamento) => {
         const success = await concluirConsignado(equipamento);
-        if (success) setEquipamentos(equipamentos.filter(c => c.id !== equipamento.id));
+        if (success)
+        setEquipamentos(equipamentos.filter(c => c.id !== equipamento.id));
         setShowConcluirModal(false);
     };
 
@@ -108,7 +111,7 @@ function ConsignadoIndex() {
     };
 
     {/* ///// */ }
-
+    
 
     {/* TABELA */ }
 
@@ -158,7 +161,7 @@ function ConsignadoIndex() {
                                 <td>{equipamento.marca}</td>
                                 <td>{equipamento.modelo}</td>
                                 <td>{equipamento.quantidade}</td>
-                                <td>{equipamento.preco}</td>
+                                <td>{formatarPreco(equipamento.preco)}</td>
                                 <td className="text-danger">{equipamento.descricao}</td>
                                 <td className=
                                     {equipamento.status === "Emprestado" ? "text-warning" :
@@ -174,7 +177,7 @@ function ConsignadoIndex() {
                                     <a variant="success" onClick={() => handleShowDeletar(equipamento)}>
                                         <i id="icon_opcoes" className="fa-solid fa-trash"></i>
                                     </a>
-                                    <a variant="success" onClick={() => handleShowPrintModal(equipamento)}>
+                                    <a variant="success" onClick={() => gerarPdf(equipamento)}>
                                         Imprimir
                                     </a>
                                 </td>
