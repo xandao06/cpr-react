@@ -122,7 +122,7 @@ function ConsignadoIndex() {
             <button id="new_consignado_btn" onClick={handleShowCriar}>
                 <img id="adicionar_consignado_img" src="./src/img/adicionar_consignado.PNG"></img>
             </button>
-            <Table className="consignados_table" striped bordered hover aria-labelledby="tableLabel">
+            <Table id="consignados_table" striped bordered hover aria-labelledby="tableLabel">
                 <thead>
                     <tr>
                         <th>Data</th>
@@ -178,7 +178,7 @@ function ConsignadoIndex() {
                                         <i id="icon_opcoes" className="fa-solid fa-trash"></i>
                                     </a>
                                     <a variant="success" onClick={() => gerarPdf(equipamento)}>
-                                        Imprimir
+                                        <i id="icon_opcoes" className="fa-solid fa-print"></i>
                                     </a>
                                 </td>
                             </tr>

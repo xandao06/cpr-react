@@ -77,6 +77,7 @@ function HistoricoIndex() {
                         <th>Contrato</th>
                         <th>Urgência</th>
                         <th>Status</th>
+                        <th>Opções</th>
                     </tr>
                 </thead>
                 <tbody>

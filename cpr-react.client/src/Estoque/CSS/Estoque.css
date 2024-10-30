@@ -3,9 +3,15 @@
 }
 
 #produto_table {
-    margin-top:5px;
+    margin-top: 5px;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    height: auto;
+    margin-left: 30px;
 }
 
-#entradasaida_btn{
-    display:flex;
+#entradasaida_btn {
+    display: flex;
+    margin-left: 30px;
 }
