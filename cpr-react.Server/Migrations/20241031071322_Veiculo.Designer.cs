@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using cpr_react.Server.Persistence;
 
@@ -11,9 +12,11 @@ using cpr_react.Server.Persistence;
 namespace cpr_react.Server.Migrations
 {
     [DbContext(typeof(CPRDbContext))]
-    partial class CPRDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241031071322_Veiculo")]
+    partial class Veiculo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -164,104 +167,6 @@ namespace cpr_react.Server.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Produtos");
-                });
-
-            modelBuilder.Entity("cpr_react.Server.RegistroFrota", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Data")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataAbastecimento")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataBalanceamento")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataOleo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataRevisao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Marca")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Modelo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Observacao")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ParaConsertar")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Placa")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("PrecoAbastecimento")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("Quilometragem")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Registros");
-                });
-
-            modelBuilder.Entity("cpr_react.Server.Veiculo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Data")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataAbastecimento")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataBalanceamento")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataOleo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataRevisao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Marca")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Modelo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Observacao")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ParaConsertar")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Placa")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("PrecoAbastecimento")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("Quilometragem")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Veiculos");
                 });
 #pragma warning restore 612, 618
         }

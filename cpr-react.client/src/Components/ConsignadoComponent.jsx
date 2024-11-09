@@ -63,14 +63,31 @@ export const formatarPreco = (valor) => {
 {/* ///// */ }
 
 
-export const gerarPdf = async () => {
-    const response = await fetch(`${apiBaseUrl}/gerar-pdf`);
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'relatorio.pdf';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+export const gerarPdf = async (id) => {
+    try {
+        const response = await fetch(`${apiBaseUrl}/gerar-pdf/${id}`, {
+            method: "GET",
+        });
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `relatorio.pdf`;
+        link.click();
+    } catch (error) {
+        console.error("Erro ao gerar PDF:", error);
+    }
 };
+
+
+//export const gerarPdf = async () => {
+//    const response = await fetch(`${apiBaseUrl}/gerar-pdf`);
+//    const blob = await response.blob();
+//    const url = window.URL.createObjectURL(blob);
+//    const a = document.createElement('a');
+//    a.href = url;
+//    a.download = 'relatorio.pdf';
+//    document.body.appendChild(a);
+//    a.click();
+//    a.remove();
+//};

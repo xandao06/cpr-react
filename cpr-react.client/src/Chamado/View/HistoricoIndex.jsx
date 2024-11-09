@@ -68,7 +68,7 @@ function HistoricoIndex() {
 
             <h2>Histórico de Chamados</h2>
             <Table id="historico_table" striped bordered hover>
-                <thead>
+                <thead className="table-dark">
                     <tr>
                         <th>Data</th>
                         <th>Hora</th>

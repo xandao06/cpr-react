@@ -85,13 +85,10 @@ function CriarConsignado({ show, handleClose, onAddConsignado }) {
         const { name, value } = event.target;
 
         if (name === 'preco') {
-            // Formata o valor como moeda
             setNewEquipamento({ ...newEquipamento, [name]: formatCurrency(value) });
         } else {
             setNewEquipamento({ ...newEquipamento, [name]: value });
         }
-
-        setNewEquipamento(prevState => ({ ...prevState, [name]: value }));
 
         if (name === 'numeroSerie') {
             const equipamentoEncontrado = equipamentos.find(equip => equip.numeroSerie.toLowerCase() === value.toLowerCase());

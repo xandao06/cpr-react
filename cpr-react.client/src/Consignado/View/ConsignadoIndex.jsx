@@ -1,6 +1,4 @@
 ﻿import { useEffect, useState, useRef } from 'react';
-import { useReactToPrint } from 'react-to-print';
-import PrintConsignado from '../Modal/PrintConsignado';
 import '../CSS/Consignado.css';
 import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -29,13 +27,13 @@ function ConsignadoIndex() {
     const [selectedEquipamento, setSelectedEquipamento] = useState(null); // GERAL
     const [equipamentos, setEquipamentos] = useState([]);  // GERAL
 
-    const [showPrintModal, setShowPrintModal] = useState(false); //PRINT LAYOUT
-    const printRef = useRef(); //PRINT LAYOUT
-    const handleShowPrintModal = (equipamento) => { //PRINT LAYOUT
-        setSelectedEquipamento(equipamento); //PRINT LAYOUT
-        setShowPrintModal(true); //PRINT LAYOUT
-    }
-    const handleClosePrintModal = () => setShowPrintModal(false); //PRINT LAYOUT
+    //const [showPrintModal, setShowPrintModal] = useState(false); //PRINT LAYOUT
+    //const printRef = useRef(); //PRINT LAYOUT
+    //const handleShowPrintModal = (equipamento) => { //PRINT LAYOUT
+    //    setSelectedEquipamento(equipamento); //PRINT LAYOUT
+    //    setShowPrintModal(true); //PRINT LAYOUT
+    //}
+    //const handleClosePrintModal = () => setShowPrintModal(false); //PRINT LAYOUT
      
     const [showCriarModal, setShowCriarModal] = useState(false);  // CRIAR
     const handleCloseCriar = () => setShowCriarModal(false); // CRIAR
@@ -73,7 +71,7 @@ function ConsignadoIndex() {
             setEquipamentos(data);
         };
         loadConsignados();
-    }, []);
+    }, [equipamentos]);
 
     {/* ADICIONA CHAMADO */ }
 
@@ -111,7 +109,7 @@ function ConsignadoIndex() {
     };
 
     {/* ///// */ }
-    
+
 
     {/* TABELA */ }
 
@@ -123,7 +121,7 @@ function ConsignadoIndex() {
                 <img id="adicionar_consignado_img" src="./src/img/adicionar_consignado.PNG"></img>
             </button>
             <Table id="consignados_table" striped bordered hover aria-labelledby="tableLabel">
-                <thead>
+                <thead className="table-dark">
                     <tr>
                         <th>Data</th>
                         <th>Hora</th>
@@ -177,7 +175,7 @@ function ConsignadoIndex() {
                                     <a variant="success" onClick={() => handleShowDeletar(equipamento)}>
                                         <i id="icon_opcoes" className="fa-solid fa-trash"></i>
                                     </a>
-                                    <a variant="success" onClick={() => gerarPdf(equipamento)}>
+                                    <a variant="success" onClick={() => gerarPdf(equipamento.id)}>
                                         <i id="icon_opcoes" className="fa-solid fa-print"></i>
                                     </a>
                                 </td>
@@ -221,12 +219,12 @@ function ConsignadoIndex() {
                 onDeletarConsignado={onDeletarConsignado}
             />
 
-            <PrintConsignado
-                ref={printRef}
-                showPrintModal={showPrintModal}
-                handleClosePrintModal={handleClosePrintModal}
-                equipamento={selectedEquipamento}
-            />
+            {/*<PrintConsignado*/}
+            {/*    ref={printRef}*/}
+            {/*    showPrintModal={showPrintModal}*/}
+            {/*    handleClosePrintModal={handleClosePrintModal}*/}
+            {/*    equipamento={selectedEquipamento}*/}
+            {/*/>*/}
 
             {/* //// */}
 

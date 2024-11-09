@@ -18,5 +18,7 @@ namespace cpr_react.Server.Persistence
         public DbSet<Chamado> Chamados { get; set; }
         public DbSet<Produto> Produtos { get; set; }
         public DbSet<Equipamento> Equipamentos { get; set; }
+        public DbSet<Veiculo> Veiculos { get; set; }
+        public DbSet<RegistroFrota> Registros { get; set; }
     }
 }

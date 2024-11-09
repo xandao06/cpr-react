@@ -125,7 +125,7 @@ function ChamadoIndex() {
                 <img id="adicionar_chamado_img" src="./src/img/adicionar_chamado.PNG"></img>
             </button>
             <Table id="chamados_table" striped bordered hover aria-labelledby="tableLabel">
-                <thead>
+                <thead className="table-dark">
                     <tr>
                         <th>Data</th>
                         <th>Hora</th>
@@ -137,7 +137,7 @@ function ChamadoIndex() {
                         <th>Opções</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="table-light">
                     {chamados
 
                         .filter(chamado => chamado.status === "Pendente")

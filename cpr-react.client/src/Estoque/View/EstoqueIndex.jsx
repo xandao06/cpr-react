@@ -101,7 +101,7 @@ function EstoqueIndex() {
                 <button onClick={() => setShowSaidaModal(true)}>Saída</button>
             </div>
             <Table id="produto_table" striped bordered hover>
-                <thead>
+                <thead className="table-dark">
                     <tr>
                         <th>Código no sistema</th>
                         <th>Nome</th>
@@ -111,6 +111,7 @@ function EstoqueIndex() {
                         <th>Preço de custo</th>
                         <th>Preço de venda</th>
                         <th>Descrição</th>
+                        <th>Opções</th>
                     </tr>
                 </thead>
                 <tbody>

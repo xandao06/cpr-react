@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<ChamadoService>();
 builder.Services.AddScoped<EstoqueService>();
 builder.Services.AddScoped<ConsignadoService>();
+builder.Services.AddScoped<FrotaService>();
 builder.Services.AddSignalR();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
